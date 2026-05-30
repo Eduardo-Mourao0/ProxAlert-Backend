@@ -35,27 +35,27 @@ export class User {
     this.createdAt = props.createdAt ?? new Date()
   }
 
-  static create(props: UserProps): User {
+  static create(props: UserProps): User { // Cria um usuário a partir de propriedades
     
-    if (!props.name || props.name.trim().length === 0) {
+    if (!props.name || props.name.trim().length === 0) { // Valida se o nome não está vazio ou apenas com espaços
       throw new InvalidNameError();
     }
-    if (!props.password || props.password.trim().length < 4) {
+    if (!props.password || props.password.trim().length < 4) { // Valida se a senha tem pelo menos 4 caracteres
       throw new InvalidPasswordError();
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/   
-    if (!props.email || !emailRegex.test(props.email)) {
+    if (!props.email || !emailRegex.test(props.email)) { // Valida se o email é válido usando uma expressão regular simples
       throw new InvalidEmailError(props.email);
     }
-    if (props.plan && !Object.values(Plan).includes(props.plan)) {
+    if (props.plan && !Object.values(Plan).includes(props.plan)) { // Valida se o plano é valido
       throw new InvalidPlanError(props.plan)
     }
 
     return new User(props)
   }
 
-  static createFromPrimitives(data: {
+  static createFromPrimitives(data: { // Cria um usuário a partir de dados primitivos
     id: string
     name: string
     email: string
@@ -76,4 +76,3 @@ export class User {
     }
   }
 }
-

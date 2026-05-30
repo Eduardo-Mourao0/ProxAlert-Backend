@@ -44,3 +44,8 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Log
+ * 
+ */
+export type Log = Prisma.LogModel
