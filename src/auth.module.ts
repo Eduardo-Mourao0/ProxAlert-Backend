@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
-import { ChangeUserPasswordUseCase } from './application/use-cases/user/change-user-password-usecase'
-import { CreateUserUseCase } from './application/use-cases/user/create-user-usecase'
-import { DeleteUserUseCase } from './application/use-cases/user/delete-user-usecase'
-import { UpdateUserProfileUseCase } from './application/use-cases/user/update-user-profile-usecase'
+import { LoginUserUseCase } from './application/use-cases/auth/login-user-usecase'
+import { RefreshTokenUseCase } from './application/use-cases/auth/refresh-token-usecase'
 import { USER_REPOSITORY } from './domain/repositories/User-Repository'
 import { PASSWORD_HASHER } from './domain/services/password-hasher'
 import { TOKEN_SERVICE } from './domain/services/token-service'
@@ -11,26 +9,22 @@ import { PrismaModule } from './infra/database/prisma/prisma.module'
 import { PrismaUserRepository } from './infra/repositories/prisma-user.repository'
 import { BcryptPasswordHasher } from './infra/services/bcrypt-password-hasher'
 import { JwtTokenService } from './infra/services/jwt-token-service'
-import { UserController } from './presentation/http/controllers/user.controller'
+import { AuthController } from './presentation/http/controllers/auth.controller'
 import { JwtAuthGuard } from './presentation/http/guards/jwt-auth.guard'
-import { UserService } from './presentation/http/services/user.service'
+import { AuthService } from './presentation/http/services/auth.service'
 
 @Module({
   imports: [PrismaModule, JwtModule.register({})],
-  controllers: [UserController],
+  controllers: [AuthController],
   providers: [
-    UserService,
+    AuthService,
     JwtAuthGuard,
-    CreateUserUseCase,
-    UpdateUserProfileUseCase,
-    ChangeUserPasswordUseCase,
-    DeleteUserUseCase,
-
+    LoginUserUseCase,
+    RefreshTokenUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,
     },
-
     {
       provide: PASSWORD_HASHER,
       useClass: BcryptPasswordHasher,
@@ -40,6 +34,6 @@ import { UserService } from './presentation/http/services/user.service'
       useClass: JwtTokenService,
     },
   ],
-  exports: [UserService],
+  exports: [TOKEN_SERVICE, JwtAuthGuard],
 })
-export class UserModule {}
+export class AuthModule {}

@@ -8,7 +8,9 @@ export interface UserDTO {
 }
 
 export interface LoginUserDTO {
-  token: string
+  accessToken: string
+  refreshToken: string
+  user: UserDTO
 }
 
 export function toUserDTO(user: User): UserDTO {

@@ -20,6 +20,7 @@ export class DeleteUserUseCase {
             throw new BusinessError('User not found', 404) // Valida se o usuário existe
         }
 
+        await this.userRepository.updateRefreshToken(request.userId, null)
         await this.userRepository.delete(request.userId) // Deleta o usuário do repositório
     }
 }

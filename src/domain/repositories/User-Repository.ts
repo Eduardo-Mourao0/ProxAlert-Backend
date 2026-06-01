@@ -11,6 +11,8 @@ export interface UserRepository {
   findById(id: string): Promise<User | null>
   
   update(user: User): Promise<User>
+
+  updateRefreshToken(userId: string, refreshTokenHash: string | null): Promise<void>
  
   findAll(): Promise<User[]>
   

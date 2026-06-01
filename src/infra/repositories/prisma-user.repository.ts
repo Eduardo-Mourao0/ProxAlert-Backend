@@ -14,6 +14,7 @@ export class PrismaUserRepository implements UserRepository {
                 name: user.name,
                 email: user.email,
                 password: user.password,
+                refreshTokenHash: user.refreshTokenHash,
                 plan: user.plan,
                 createdAt: user.createdAt,
             },
@@ -52,11 +53,19 @@ export class PrismaUserRepository implements UserRepository {
                 name: user.name,
                 email: user.email,
                 password: user.password,
+                refreshTokenHash: user.refreshTokenHash,
                 plan: user.plan,
             },
         })
 
         return this.toDomain(updatedUser)
+    }
+
+    async updateRefreshToken(userId: string, refreshTokenHash: string | null): Promise<void> {
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: { refreshTokenHash },
+        })
     }
 
     async findAll(): Promise<User[]> { // Busca todos os usuários usando o Prisma
@@ -76,6 +85,7 @@ export class PrismaUserRepository implements UserRepository {
         name: string
         email: string
         password: string
+        refreshTokenHash: string | null
         plan: string
         createdAt: Date
     }): User {
@@ -84,6 +94,7 @@ export class PrismaUserRepository implements UserRepository {
             name: user.name,
             email: user.email,
             password: user.password,
+            refreshTokenHash: user.refreshTokenHash,
             plan: user.plan as Plan,
             createdAt: user.createdAt,
         })

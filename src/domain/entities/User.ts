@@ -14,6 +14,7 @@ export interface UserProps {
   name: string
   email: string
   password: string
+  refreshTokenHash?: string | null
   plan?: Plan
   createdAt?: Date
 }
@@ -23,6 +24,7 @@ export class User {
   public name: string
   public email: string
   public password: string
+  public refreshTokenHash: string | null
   public plan: Plan
   public readonly createdAt: Date
 
@@ -31,6 +33,7 @@ export class User {
     this.name = props.name.trim()
     this.email = props.email.trim().toLowerCase()
     this.password = props.password
+    this.refreshTokenHash = props.refreshTokenHash ?? null
     this.plan = props.plan ?? Plan.FREE
     this.createdAt = props.createdAt ?? new Date()
   }
@@ -60,6 +63,7 @@ export class User {
     name: string
     email: string
     password: string
+    refreshTokenHash?: string | null
     plan: Plan
     createdAt: Date
   }): User {

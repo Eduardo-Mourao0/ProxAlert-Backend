@@ -331,10 +331,6 @@ export type EnumLogLevelFieldUpdateOperationsInput = {
   set?: $Enums.LogLevel
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 
 
 export type LogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{

@@ -6,6 +6,7 @@ import { PASSWORD_HASHER, type PasswordHasher } from "../../../domain/services/p
 
 interface ChangeUserPasswordRequest {
     userId: string;
+    currentPassword: string;
     password: string;
     confirmpassword: string
 }   
@@ -24,6 +25,10 @@ export class ChangeUserPasswordUseCase {
 
         if (!user) throw new BusinessError('User not found', 404) // Valida se o usuário existe
 
+        const passwordMatches = await this.passwordHasher.compare(request.currentPassword, user.password)
+
+        if (!passwordMatches) throw new BusinessError('Invalid credentials', 401) // Valida se a senha atual é valida
+
         if( request.password !== request.confirmpassword) {
             throw new BusinessError('Passwords do not match', 400) // Valida se as senhas coincidem
         }
@@ -31,6 +36,7 @@ export class ChangeUserPasswordUseCase {
         const hashedPassword = await this.passwordHasher.hash(request.password) // Hash da senha
 
         user.password = hashedPassword // Atualiza a senha
+        user.refreshTokenHash = null
 
         const updatedUser = await this.userRepository.update(user) // Atualiza o usuário no repositório
 
