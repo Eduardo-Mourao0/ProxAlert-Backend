@@ -1,4 +1,4 @@
-import { USER_REPOSITORY, type UserRepository } from "../../../domain/repositories/User-Repository";
+import { USER_REPOSITORY, type UserRepository } from "../../../domain/repositories/user-repository";
 import { Inject, Injectable } from "@nestjs/common";
 import { BusinessError } from "../../../domain/errors/business-error";
 import { toUserDTO, UserDTO } from "../../dtos/create-user.dto";

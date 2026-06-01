@@ -4,7 +4,7 @@ import { ChangeUserPasswordUseCase } from './application/use-cases/user/change-u
 import { CreateUserUseCase } from './application/use-cases/user/create-user-usecase'
 import { DeleteUserUseCase } from './application/use-cases/user/delete-user-usecase'
 import { UpdateUserProfileUseCase } from './application/use-cases/user/update-user-profile-usecase'
-import { USER_REPOSITORY } from './domain/repositories/User-Repository'
+import { USER_REPOSITORY } from './domain/repositories/user-repository'
 import { PASSWORD_HASHER } from './domain/services/password-hasher'
 import { TOKEN_SERVICE } from './domain/services/token-service'
 import { PrismaModule } from './infra/database/prisma/prisma.module'

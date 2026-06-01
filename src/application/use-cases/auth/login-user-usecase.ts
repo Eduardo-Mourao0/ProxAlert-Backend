@@ -12,7 +12,7 @@ import {
 import {
   USER_REPOSITORY,
   type UserRepository,
-} from '../../../domain/repositories/User-Repository'
+} from '../../../domain/repositories/user-repository'
 
 export interface LoginUserRequest {
   email: string

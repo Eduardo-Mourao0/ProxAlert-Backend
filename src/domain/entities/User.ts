@@ -70,13 +70,7 @@ export class User {
     return new User(data)
   }
 
-  toJSON() {
-    return {
-      id: this.id,
-      name: this.name,
-      email: this.email,
-      plan: this.plan,
-      createdAt: this.createdAt,
-    }
+  isPremium(): boolean { // Verifica se o usuário é premium
+    return this.plan === Plan.PREMIUM
   }
 }

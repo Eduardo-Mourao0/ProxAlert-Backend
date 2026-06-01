@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  Alarm: 'Alarm',
   Log: 'Log'
 } as const
 
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "log"
+    modelProps: "user" | "alarm" | "log"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -476,6 +477,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    Alarm: {
+      payload: Prisma.$AlarmPayload<ExtArgs>
+      fields: Prisma.AlarmFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AlarmFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AlarmFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>
+        }
+        findFirst: {
+          args: Prisma.AlarmFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AlarmFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>
+        }
+        findMany: {
+          args: Prisma.AlarmFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>[]
+        }
+        create: {
+          args: Prisma.AlarmCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>
+        }
+        createMany: {
+          args: Prisma.AlarmCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AlarmCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>[]
+        }
+        delete: {
+          args: Prisma.AlarmDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>
+        }
+        update: {
+          args: Prisma.AlarmUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>
+        }
+        deleteMany: {
+          args: Prisma.AlarmDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AlarmUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AlarmUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>[]
+        }
+        upsert: {
+          args: Prisma.AlarmUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmPayload>
+        }
+        aggregate: {
+          args: Prisma.AlarmAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAlarm>
+        }
+        groupBy: {
+          args: Prisma.AlarmGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlarmGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AlarmCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlarmCountAggregateOutputType> | number
         }
       }
     }
@@ -606,6 +681,22 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const AlarmScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  radius: 'radius',
+  isActive: 'isActive',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlarmScalarFieldEnum = (typeof AlarmScalarFieldEnum)[keyof typeof AlarmScalarFieldEnum]
+
+
 export const LogScalarFieldEnum = {
   id: 'id',
   level: 'level',
@@ -691,16 +782,16 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'LogLevel'
+ * Reference to a field of type 'Float'
  */
-export type EnumLogLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LogLevel'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'LogLevel[]'
+ * Reference to a field of type 'Float[]'
  */
-export type ListEnumLogLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LogLevel[]'>
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -715,6 +806,27 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'LogLevel'
+ */
+export type EnumLogLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LogLevel'>
+    
+
+
+/**
+ * Reference to a field of type 'LogLevel[]'
+ */
+export type ListEnumLogLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LogLevel[]'>
     
 
 /**
@@ -828,6 +940,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  alarm?: Prisma.AlarmOmit
   log?: Prisma.LogOmit
 }
 

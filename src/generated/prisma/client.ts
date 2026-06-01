@@ -45,6 +45,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model Alarm
+ * 
+ */
+export type Alarm = Prisma.AlarmModel
+/**
  * Model Log
  * 
  */

@@ -1,5 +1,5 @@
 import { Plan, User } from "../../domain/entities/User";
-import { UserRepository } from "../../domain/repositories/User-Repository";
+import { UserRepository } from "../../domain/repositories/user-repository";
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../database/prisma/prisma.service'
 

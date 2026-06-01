@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common"
 import { Plan, User } from "../../../domain/entities/User"
-import { USER_REPOSITORY, type UserRepository } from "../../../domain/repositories/User-Repository"
+import { USER_REPOSITORY, type UserRepository } from "../../../domain/repositories/user-repository"
 import { BusinessError } from "../../../domain/errors/business-error"
 import { InvalidPasswordError } from "../../../domain/errors/invalid-password-error"
 import { toUserDTO, UserDTO } from "../../dtos/create-user.dto"
