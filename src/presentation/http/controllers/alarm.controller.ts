@@ -33,6 +33,7 @@ export class AlarmController {
       userId: request.user.id,
       title: data.title,
       description: data.description ?? null,
+      address: data.address ?? null,
       latitude: data.latitude,
       longitude: data.longitude,
       radius: data.radius,

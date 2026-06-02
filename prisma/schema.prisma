@@ -35,6 +35,7 @@ model Alarm {
   id        String   @id
   title     String
   description String?
+  address   String?
   latitude  Float
   longitude Float
   radius    Int

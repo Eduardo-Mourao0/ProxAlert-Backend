@@ -14,7 +14,7 @@ import { JwtTokenService } from './infra/services/jwt-token-service'
 import { UserController } from './presentation/http/controllers/user.controller'
 import { JwtAuthGuard } from './presentation/http/guards/jwt-auth.guard'
 import { UserService } from './presentation/http/services/user.service'
-
+import { UpdateUserPlanUseCase } from './application/use-cases/user/update-user-plan-usecase'
 @Module({
   imports: [PrismaModule, JwtModule.register({})],
   controllers: [UserController],
@@ -25,7 +25,7 @@ import { UserService } from './presentation/http/services/user.service'
     UpdateUserProfileUseCase,
     ChangeUserPasswordUseCase,
     DeleteUserUseCase,
-
+    UpdateUserPlanUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,

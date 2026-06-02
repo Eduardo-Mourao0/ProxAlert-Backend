@@ -42,6 +42,7 @@ export type AlarmMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  address: string | null
   latitude: number | null
   longitude: number | null
   radius: number | null
@@ -55,6 +56,7 @@ export type AlarmMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  address: string | null
   latitude: number | null
   longitude: number | null
   radius: number | null
@@ -68,6 +70,7 @@ export type AlarmCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  address: number
   latitude: number
   longitude: number
   radius: number
@@ -95,6 +98,7 @@ export type AlarmMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  address?: true
   latitude?: true
   longitude?: true
   radius?: true
@@ -108,6 +112,7 @@ export type AlarmMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  address?: true
   latitude?: true
   longitude?: true
   radius?: true
@@ -121,6 +126,7 @@ export type AlarmCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  address?: true
   latitude?: true
   longitude?: true
   radius?: true
@@ -221,6 +227,7 @@ export type AlarmGroupByOutputType = {
   id: string
   title: string
   description: string | null
+  address: string | null
   latitude: number
   longitude: number
   radius: number
@@ -257,6 +264,7 @@ export type AlarmWhereInput = {
   id?: Prisma.StringFilter<"Alarm"> | string
   title?: Prisma.StringFilter<"Alarm"> | string
   description?: Prisma.StringNullableFilter<"Alarm"> | string | null
+  address?: Prisma.StringNullableFilter<"Alarm"> | string | null
   latitude?: Prisma.FloatFilter<"Alarm"> | number
   longitude?: Prisma.FloatFilter<"Alarm"> | number
   radius?: Prisma.IntFilter<"Alarm"> | number
@@ -271,6 +279,7 @@ export type AlarmOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
@@ -288,6 +297,7 @@ export type AlarmWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AlarmWhereInput | Prisma.AlarmWhereInput[]
   title?: Prisma.StringFilter<"Alarm"> | string
   description?: Prisma.StringNullableFilter<"Alarm"> | string | null
+  address?: Prisma.StringNullableFilter<"Alarm"> | string | null
   latitude?: Prisma.FloatFilter<"Alarm"> | number
   longitude?: Prisma.FloatFilter<"Alarm"> | number
   radius?: Prisma.IntFilter<"Alarm"> | number
@@ -302,6 +312,7 @@ export type AlarmOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
@@ -323,6 +334,7 @@ export type AlarmScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Alarm"> | string
   title?: Prisma.StringWithAggregatesFilter<"Alarm"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Alarm"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Alarm"> | string | null
   latitude?: Prisma.FloatWithAggregatesFilter<"Alarm"> | number
   longitude?: Prisma.FloatWithAggregatesFilter<"Alarm"> | number
   radius?: Prisma.IntWithAggregatesFilter<"Alarm"> | number
@@ -336,6 +348,7 @@ export type AlarmCreateInput = {
   id: string
   title: string
   description?: string | null
+  address?: string | null
   latitude: number
   longitude: number
   radius: number
@@ -349,6 +362,7 @@ export type AlarmUncheckedCreateInput = {
   id: string
   title: string
   description?: string | null
+  address?: string | null
   latitude: number
   longitude: number
   radius: number
@@ -362,6 +376,7 @@ export type AlarmUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -375,6 +390,7 @@ export type AlarmUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -388,6 +404,7 @@ export type AlarmCreateManyInput = {
   id: string
   title: string
   description?: string | null
+  address?: string | null
   latitude: number
   longitude: number
   radius: number
@@ -401,6 +418,7 @@ export type AlarmUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -413,6 +431,7 @@ export type AlarmUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -436,6 +455,7 @@ export type AlarmCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
@@ -455,6 +475,7 @@ export type AlarmMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
@@ -468,6 +489,7 @@ export type AlarmMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   radius?: Prisma.SortOrder
@@ -549,6 +571,7 @@ export type AlarmCreateWithoutUserInput = {
   id: string
   title: string
   description?: string | null
+  address?: string | null
   latitude: number
   longitude: number
   radius: number
@@ -561,6 +584,7 @@ export type AlarmUncheckedCreateWithoutUserInput = {
   id: string
   title: string
   description?: string | null
+  address?: string | null
   latitude: number
   longitude: number
   radius: number
@@ -602,6 +626,7 @@ export type AlarmScalarWhereInput = {
   id?: Prisma.StringFilter<"Alarm"> | string
   title?: Prisma.StringFilter<"Alarm"> | string
   description?: Prisma.StringNullableFilter<"Alarm"> | string | null
+  address?: Prisma.StringNullableFilter<"Alarm"> | string | null
   latitude?: Prisma.FloatFilter<"Alarm"> | number
   longitude?: Prisma.FloatFilter<"Alarm"> | number
   radius?: Prisma.IntFilter<"Alarm"> | number
@@ -615,6 +640,7 @@ export type AlarmCreateManyUserInput = {
   id: string
   title: string
   description?: string | null
+  address?: string | null
   latitude: number
   longitude: number
   radius: number
@@ -627,6 +653,7 @@ export type AlarmUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -639,6 +666,7 @@ export type AlarmUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -651,6 +679,7 @@ export type AlarmUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   radius?: Prisma.IntFieldUpdateOperationsInput | number
@@ -665,6 +694,7 @@ export type AlarmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   title?: boolean
   description?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
@@ -679,6 +709,7 @@ export type AlarmSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   title?: boolean
   description?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
@@ -693,6 +724,7 @@ export type AlarmSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   title?: boolean
   description?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
@@ -707,6 +739,7 @@ export type AlarmSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  address?: boolean
   latitude?: boolean
   longitude?: boolean
   radius?: boolean
@@ -716,7 +749,7 @@ export type AlarmSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AlarmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "latitude" | "longitude" | "radius" | "isActive" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["alarm"]>
+export type AlarmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "address" | "latitude" | "longitude" | "radius" | "isActive" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["alarm"]>
 export type AlarmInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -736,6 +769,7 @@ export type $AlarmPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: string
     title: string
     description: string | null
+    address: string | null
     latitude: number
     longitude: number
     radius: number
@@ -1170,6 +1204,7 @@ export interface AlarmFieldRefs {
   readonly id: Prisma.FieldRef<"Alarm", 'String'>
   readonly title: Prisma.FieldRef<"Alarm", 'String'>
   readonly description: Prisma.FieldRef<"Alarm", 'String'>
+  readonly address: Prisma.FieldRef<"Alarm", 'String'>
   readonly latitude: Prisma.FieldRef<"Alarm", 'Float'>
   readonly longitude: Prisma.FieldRef<"Alarm", 'Float'>
   readonly radius: Prisma.FieldRef<"Alarm", 'Int'>

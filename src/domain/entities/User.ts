@@ -76,4 +76,12 @@ export class User {
   isPremium(): boolean {
     return this.plan === Plan.PREMIUM
   }
+
+  upgradeToPremium(): void {
+    this.plan = Plan.PREMIUM
+  }
+
+  downgradeToFree(): void {
+    this.plan = Plan.FREE
+  } 
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "Alarm" ADD COLUMN "address" TEXT;

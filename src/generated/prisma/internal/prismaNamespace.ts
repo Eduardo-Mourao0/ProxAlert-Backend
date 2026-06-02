@@ -685,6 +685,7 @@ export const AlarmScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  address: 'address',
   latitude: 'latitude',
   longitude: 'longitude',
   radius: 'radius',

@@ -14,6 +14,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
         userId: alarm.userId,
         title: alarm.title,
         description: alarm.description,
+        address: alarm.address,
         latitude: alarm.latitude,
         longitude: alarm.longitude,
         radius: alarm.radius,
@@ -56,6 +57,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
       data: {
         title: alarm.title,
         description: alarm.description,
+        address: alarm.address,
         latitude: alarm.latitude,
         longitude: alarm.longitude,
         radius: alarm.radius,
@@ -77,6 +79,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
     userId: string
     title: string
     description: string | null
+    address: string | null
     isActive: boolean
     latitude: number
     longitude: number
@@ -88,6 +91,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
       userId: alarm.userId,
       title: alarm.title,
       description: alarm.description,
+      address: alarm.address,
       isActive: alarm.isActive,
       latitude: alarm.latitude,
       longitude: alarm.longitude,

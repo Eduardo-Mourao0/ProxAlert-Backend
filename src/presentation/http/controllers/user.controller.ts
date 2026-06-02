@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Patch, Post, Req, UseGuards } from '@nestjs/common'
-import { createUserBodySchema, upgradeUserBodySchema, changeUserPasswordBodySchema } from '../validators/user.validator'
+import { createUserBodySchema, upgradeUserBodySchema, changeUserPasswordBodySchema, deleteUserBodySchema, updateUserPlanBodySchema } from '../validators/user.validator'
 import { UserService } from '../services/user.service'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import type { AuthenticatedRequest } from '../guards/jwt-auth.guard'
@@ -43,9 +43,23 @@ export class UserController {
   @Delete('/me')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
-  async delete(@Req() request: AuthenticatedRequest) {
+  async delete(@Body() body: unknown, @Req() request: AuthenticatedRequest) {
+    deleteUserBodySchema.parse(body)
+
     return this.userService.delete({
       userId: request.user.id,
+    })
+  }
+
+  @Patch('/me/plan')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async updatePlan(@Body() body: unknown, @Req() request: AuthenticatedRequest ) {
+    const data = updateUserPlanBodySchema.parse(body)
+
+    return this.userService.updatePlan({
+      userId: request.user.id,
+      plan: data.plan,
     })
   }
 }

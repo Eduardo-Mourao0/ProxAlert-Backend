@@ -1,15 +1,17 @@
 import { randomUUID } from 'crypto'
-import { InvalidAlarmCoordinatesError } from '../errors/invalid-alarm-coordinates-error'
 import { InvalidAlarmDescriptionError } from '../errors/invalid-alarm-description-error'
 import { InvalidAlarmRadiusError } from '../errors/invalid-alarm-radius-error'
 import { InvalidAlarmTitleError } from '../errors/invalid-alarm-title-error'
 import { InvalidAlarmUserError } from '../errors/invalid-alarm-user-error'
+import { Destination } from './Destination'
+import { Location } from './Location'
 
 export interface AlarmProps {
   id?: string
   userId: string
   title: string
   description?: string | null
+  address?: string | null
   isActive?: boolean
   latitude: number
   longitude: number
@@ -23,8 +25,7 @@ export class Alarm {
   public title: string
   public description: string | null
   public isActive: boolean
-  public latitude: number
-  public longitude: number
+  public destination: Destination
   public radius: number
   public readonly createdAt: Date
 
@@ -34,8 +35,11 @@ export class Alarm {
     this.title = props.title.trim()
     this.description = props.description?.trim() || null
     this.isActive = props.isActive ?? true
-    this.latitude = props.latitude
-    this.longitude = props.longitude
+    this.destination = Destination.create({
+      address: props.address,
+      latitude: props.latitude,
+      longitude: props.longitude,
+    })
     this.radius = props.radius
     this.createdAt = props.createdAt ?? new Date()
   }
@@ -51,6 +55,7 @@ export class Alarm {
     userId: string
     title: string
     description?: string | null
+    address?: string | null
     isActive: boolean
     latitude: number
     longitude: number
@@ -60,9 +65,26 @@ export class Alarm {
     return new Alarm(data)
   }
 
+  get address(): string | null {
+    return this.destination.address
+  }
+
+  get location(): Location {
+    return this.destination.location
+  }
+
+  get latitude(): number {
+    return this.destination.latitude
+  }
+
+  get longitude(): number {
+    return this.destination.longitude
+  }
+
   update(props: {
     title?: string
     description?: string | null
+    address?: string | null
     latitude?: number
     longitude?: number
     radius?: number
@@ -72,6 +94,7 @@ export class Alarm {
       userId: this.userId,
       title: props.title ?? this.title,
       description: props.description !== undefined ? props.description : this.description,
+      address: props.address !== undefined ? props.address : this.address,
       isActive: this.isActive,
       latitude: props.latitude ?? this.latitude,
       longitude: props.longitude ?? this.longitude,
@@ -83,16 +106,17 @@ export class Alarm {
 
     this.title = updatedProps.title
     this.description = updatedProps.description ?? null
-    this.latitude = updatedProps.latitude
-    this.longitude = updatedProps.longitude
+    this.destination = Destination.create({
+      address: updatedProps.address,
+      latitude: updatedProps.latitude,
+      longitude: updatedProps.longitude,
+    })
     this.radius = updatedProps.radius
   }
 
-  toggleStatus(): void { // Alterna o status do alarme (on/off)
+  toggleStatus(): void {
     this.isActive = !this.isActive
   }
-  
-
 
   private static validate(props: AlarmProps): void {
     if (!props.userId || props.userId.trim().length === 0) {
@@ -109,18 +133,6 @@ export class Alarm {
 
     if (props.description && props.description.trim().length > 255) {
       throw new InvalidAlarmDescriptionError()
-    }
-
-    if (!Number.isFinite(props.latitude) || !Number.isFinite(props.longitude)) {
-      throw new InvalidAlarmCoordinatesError()
-    }
-
-    if (props.latitude < -90 || props.latitude > 90) {
-      throw new InvalidAlarmCoordinatesError()
-    }
-
-    if (props.longitude < -180 || props.longitude > 180) {
-      throw new InvalidAlarmCoordinatesError()
     }
 
     if (!Number.isFinite(props.radius) || props.radius < 50 || props.radius > 50000) {

@@ -109,12 +109,14 @@ describe('CreateAlarmUseCase', () => {
       userId: user.id,
       title: 'Casa',
       description: 'Chegando em casa',
+      address: 'Av. Paulista, 1000 - Sao Paulo',
       latitude: -23.5505,
       longitude: -46.6333,
       radius: 500,
     })
 
     expect(alarm.title).toBe('Casa')
+    expect(alarm.address).toBe('Av. Paulista, 1000 - Sao Paulo')
     expect(alarm.userId).toBe(user.id)
     expect(alarmRepository.alarms).toHaveLength(1)
   })

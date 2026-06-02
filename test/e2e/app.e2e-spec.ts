@@ -19,6 +19,7 @@ import { RefreshTokenUseCase } from '../../src/application/use-cases/auth/refres
 import { ChangeUserPasswordUseCase } from '../../src/application/use-cases/user/change-user-password-usecase'
 import { CreateUserUseCase } from '../../src/application/use-cases/user/create-user-usecase'
 import { DeleteUserUseCase } from '../../src/application/use-cases/user/delete-user-usecase'
+import { UpdateUserPlanUseCase } from '../../src/application/use-cases/user/update-user-plan-usecase'
 import { UpdateUserProfileUseCase } from '../../src/application/use-cases/user/update-user-profile-usecase'
 import { Alarm } from '../../src/domain/entities/Alarm'
 import { User } from '../../src/domain/entities/User'
@@ -235,6 +236,7 @@ describe('ProxAlert HTTP API (e2e)', () => {
         JwtAuthGuard,
         CreateUserUseCase,
         UpdateUserProfileUseCase,
+        UpdateUserPlanUseCase,
         ChangeUserPasswordUseCase,
         DeleteUserUseCase,
         LoginUserUseCase,
@@ -272,7 +274,7 @@ describe('ProxAlert HTTP API (e2e)', () => {
   })
 
   afterEach(async () => {
-    await app.close()
+    await app?.close()
   })
 
   async function createUserAndLogin() {
@@ -366,6 +368,7 @@ describe('ProxAlert HTTP API (e2e)', () => {
       .send({
         title: 'Casa',
         description: 'Voce esta chegando.',
+        address: 'Av. Paulista, 1000 - Sao Paulo',
         latitude: -23.5505,
         longitude: -46.6333,
         radius: 500,
@@ -375,6 +378,7 @@ describe('ProxAlert HTTP API (e2e)', () => {
     expect(createResponse.body).toMatchObject({
       title: 'Casa',
       description: 'Voce esta chegando.',
+      address: 'Av. Paulista, 1000 - Sao Paulo',
       isActive: true,
       radius: 500,
     })
@@ -438,5 +442,48 @@ describe('ProxAlert HTTP API (e2e)', () => {
       .expect(403)
 
     expect(response.body.message).toBe('Free users can create up to 3 alarms.')
+  })
+
+  it('updates the authenticated user plan to premium', async () => {
+    const { accessToken } = await createUserAndLogin()
+
+    const response = await request(app.getHttpServer())
+      .patch('/users/me/plan')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({ plan: 'PREMIUM' })
+      .expect(200)
+
+    expect(response.body.plan).toBe('PREMIUM')
+  })
+
+  it('allows premium users to create more than 3 alarms', async () => {
+    const { accessToken } = await createUserAndLogin()
+
+    await request(app.getHttpServer())
+      .patch('/users/me/plan')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({ plan: 'PREMIUM' })
+      .expect(200)
+
+    for (const title of ['Casa', 'Trabalho', 'Faculdade', 'Academia']) {
+      await request(app.getHttpServer())
+        .post('/alarms')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          title,
+          description: null,
+          latitude: -23.5505,
+          longitude: -46.6333,
+          radius: 500,
+        })
+        .expect(201)
+    }
+
+    const response = await request(app.getHttpServer())
+      .get('/alarms')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+
+    expect(response.body).toHaveLength(4)
   })
 })

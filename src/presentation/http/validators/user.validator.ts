@@ -29,3 +29,7 @@ export const changeUserPasswordBodySchema = z.object({
   message: 'As senhas nao coincidem.',
   path: ['confirmpassword'],
 }).strict()
+
+export const updateUserPlanBodySchema = z.object({
+  plan: z.nativeEnum(Plan),
+}).strict()

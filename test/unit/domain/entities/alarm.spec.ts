@@ -1,4 +1,6 @@
 import { Alarm } from '../../../../src/domain/entities/Alarm'
+import { Destination } from '../../../../src/domain/entities/Destination'
+import { Location } from '../../../../src/domain/entities/Location'
 import { InvalidAlarmCoordinatesError } from '../../../../src/domain/errors/invalid-alarm-coordinates-error'
 import { InvalidAlarmRadiusError } from '../../../../src/domain/errors/invalid-alarm-radius-error'
 import { InvalidAlarmTitleError } from '../../../../src/domain/errors/invalid-alarm-title-error'
@@ -8,6 +10,7 @@ const validAlarmProps = {
   userId: 'user-id',
   title: 'Casa',
   description: 'Chegando em casa',
+  address: 'Av. Paulista, 1000 - Sao Paulo',
   latitude: -23.5505,
   longitude: -46.6333,
   radius: 500,
@@ -24,7 +27,12 @@ describe('Alarm entity', () => {
     expect(alarm.id).toEqual(expect.any(String))
     expect(alarm.title).toBe('Casa')
     expect(alarm.description).toBe('Chegando em casa')
+    expect(alarm.address).toBe('Av. Paulista, 1000 - Sao Paulo')
     expect(alarm.isActive).toBe(true)
+    expect(alarm.destination).toBeInstanceOf(Destination)
+    expect(alarm.location).toBeInstanceOf(Location)
+    expect(alarm.latitude).toBe(-23.5505)
+    expect(alarm.longitude).toBe(-46.6333)
   })
 
   it('updates alarm data using the entity validation', () => {
@@ -33,6 +41,7 @@ describe('Alarm entity', () => {
     alarm.update({
       title: 'Trabalho',
       description: null,
+      address: 'Rua do Trabalho, 200',
       latitude: -22,
       longitude: -43,
       radius: 1000,
@@ -40,6 +49,9 @@ describe('Alarm entity', () => {
 
     expect(alarm.title).toBe('Trabalho')
     expect(alarm.description).toBeNull()
+    expect(alarm.address).toBe('Rua do Trabalho, 200')
+    expect(alarm.destination).toBeInstanceOf(Destination)
+    expect(alarm.location).toBeInstanceOf(Location)
     expect(alarm.latitude).toBe(-22)
     expect(alarm.longitude).toBe(-43)
     expect(alarm.radius).toBe(1000)
@@ -87,5 +99,14 @@ describe('Alarm entity', () => {
         radius: 49,
       }),
     ).toThrow(InvalidAlarmRadiusError)
+  })
+
+  it('rejects long addresses', () => {
+    expect(() =>
+      Alarm.create({
+        ...validAlarmProps,
+        address: 'a'.repeat(256),
+      }),
+    ).toThrow()
   })
 })

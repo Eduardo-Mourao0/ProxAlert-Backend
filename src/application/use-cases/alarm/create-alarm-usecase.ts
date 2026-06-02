@@ -10,6 +10,7 @@ export interface CreateAlarmRequest {
     userId: string;
     title: string;
     description: string | null;
+    address?: string | null;
     latitude: number;
     longitude: number;
     radius: number;
@@ -40,6 +41,7 @@ export class CreateAlarmUseCase {
             userId: request.userId,
             title: request.title,
             description: request.description,
+            address: request.address,
             latitude: request.latitude,
             longitude: request.longitude,
             radius: request.radius,

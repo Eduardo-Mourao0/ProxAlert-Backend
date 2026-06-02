@@ -3,6 +3,7 @@ import { CreateUserRequest, CreateUserUseCase } from '../../../application/use-c
 import { ChangeUserPasswordRequest, ChangeUserPasswordUseCase } from '../../../application/use-cases/user/change-user-password-usecase'
 import { DeleteUserRequest, DeleteUserUseCase } from '../../../application/use-cases/user/delete-user-usecase'
 import { UpdateUserProfileRequest, UpdateUserProfileUseCase } from '../../../application/use-cases/user/update-user-profile-usecase'
+import { UpdateUserPlanRequest, UpdateUserPlanUseCase } from '../../../application/use-cases/user/update-user-plan-usecase'
 
 @Injectable()
 export class UserService {
@@ -11,6 +12,7 @@ export class UserService {
     private readonly updateUserProfileUseCase: UpdateUserProfileUseCase,
     private readonly changeUserPasswordUseCase: ChangeUserPasswordUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
+    private readonly updateUserPlanUseCase: UpdateUserPlanUseCase,
   ) {}
 
   create(data: CreateUserRequest) {
@@ -27,5 +29,9 @@ export class UserService {
 
   delete(data: DeleteUserRequest) {
     return this.deleteUserUseCase.execute(data)
+  }
+
+  updatePlan(data: UpdateUserPlanRequest) {
+    return this.updateUserPlanUseCase.execute(data)
   }
 }

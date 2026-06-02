@@ -5,6 +5,7 @@ export interface AlarmDTO {
   userId: string
   title: string
   description: string | null
+  address: string | null
   isActive: boolean
   latitude: number
   longitude: number
@@ -18,6 +19,7 @@ export function toAlarmDTO(alarm: Alarm): AlarmDTO {
     userId: alarm.userId,
     title: alarm.title,
     description: alarm.description,
+    address: alarm.address,
     isActive: alarm.isActive,
     latitude: alarm.latitude,
     longitude: alarm.longitude,
