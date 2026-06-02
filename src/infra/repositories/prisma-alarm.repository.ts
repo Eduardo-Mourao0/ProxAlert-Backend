@@ -30,9 +30,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
       where: { id },
     })
 
-    if (!alarm) {
-      return null
-    }
+    if (!alarm) return null
 
     return this.toDomain(alarm)
   }

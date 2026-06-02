@@ -60,6 +60,40 @@ export class Alarm {
     return new Alarm(data)
   }
 
+  update(props: {
+    title?: string
+    description?: string | null
+    latitude?: number
+    longitude?: number
+    radius?: number
+  }) {
+    const updatedProps = {
+      id: this.id,
+      userId: this.userId,
+      title: props.title ?? this.title,
+      description: props.description !== undefined ? props.description : this.description,
+      isActive: this.isActive,
+      latitude: props.latitude ?? this.latitude,
+      longitude: props.longitude ?? this.longitude,
+      radius: props.radius ?? this.radius,
+      createdAt: this.createdAt,
+    }
+
+    Alarm.validate(updatedProps)
+
+    this.title = updatedProps.title
+    this.description = updatedProps.description ?? null
+    this.latitude = updatedProps.latitude
+    this.longitude = updatedProps.longitude
+    this.radius = updatedProps.radius
+  }
+
+  toggleStatus(): void {
+    this.isActive = !this.isActive
+  }
+  
+
+
   private static validate(props: AlarmProps): void {
     if (!props.userId || props.userId.trim().length === 0) {
       throw new InvalidAlarmUserError()

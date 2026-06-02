@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { BusinessError } from "../../../domain/errors/business-error";
 import { toUserDTO, UserDTO } from "../../dtos/create-user.dto";
 
-interface UpdateUserProfileRequest {
+export interface UpdateUserProfileRequest {
     userId: string
     name?: string
     email?: string
@@ -19,9 +19,17 @@ export class UpdateUserProfileUseCase {
     async execute(request: UpdateUserProfileRequest): Promise<UserDTO> {
         const user = await this.userRepository.findById(request.userId) // Busca o usuário pelo ID
 
-        if (!user) throw new BusinessError('User not found', 404) // Valida se o usuário existe
+        if (!user) throw new BusinessError('User not found', 404) 
 
-        if (request.name) user.name = request.name // Atualiza o nome do usuário se fornecido
+        if (request.name){ // Atualiza o nome do usuário se fornecido
+            const name = request.name.trim() 
+            
+            if(request.name.trim() === '' || name.length < 2){ 
+                throw new BusinessError('Name must be at least 2 characters long', 400) // Valida se o nome não é vazio
+            }
+            
+            user.name = request.name.trim() // Atualiza o nome do usuário, removendo espaços extras
+        }
 
         if (request.email) {
             const email = request.email.trim().toLowerCase() // Normaliza o email para evitar duplicatas por diferenças de maiúsculas/minúsculas ou espaços

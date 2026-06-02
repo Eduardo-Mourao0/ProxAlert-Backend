@@ -2,7 +2,7 @@ import { USER_REPOSITORY, type UserRepository } from '../../../domain/repositori
 import { Inject, Injectable } from '@nestjs/common'
 import { BusinessError } from '../../../domain/errors/business-error'
 
-interface DeleteUserRequest {
+export interface DeleteUserRequest {
     userId: string
 }
 

@@ -4,7 +4,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { toUserDTO, UserDTO } from "../../dtos/create-user.dto";
 import { PASSWORD_HASHER, type PasswordHasher } from "../../../domain/services/password-hasher";
 
-interface ChangeUserPasswordRequest {
+export interface ChangeUserPasswordRequest {
     userId: string;
     currentPassword: string;
     password: string;

@@ -45,8 +45,8 @@ export class CreateAlarmUseCase {
             radius: request.radius,
         });
 
-        const createdAlarm = await this.alarmRepository.create(alarm);
+        const createdAlarm = await this.alarmRepository.create(alarm); // Cria o alarme
 
-        return toAlarmDTO(createdAlarm);
+        return toAlarmDTO(createdAlarm); // Retorna o alarme criado como um DTO
     }
 }
