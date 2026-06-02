@@ -16,16 +16,16 @@ export class ToggleAlarmStatusUseCase {
   ) {}
 
   async execute(request: ToggleAlarmStatusRequest): Promise<AlarmDTO> {
-    const alarm = await this.alarmRepository.findById(request.alarmId)
+    const alarm = await this.alarmRepository.findById(request.alarmId) // Busca o alarme pelo ID
 
-    if (!alarm || alarm.userId !== request.userId) {
+    if (!alarm || alarm.userId !== request.userId) { // Verifica se o alarme existe e se pertence ao usuário que está tentando alterá-lo
       throw new BusinessError('Alarm not found.', 404)
     }
 
-    alarm.toggleStatus()
+    alarm.toggleStatus() // Alterna o status do alarme (on/off)
 
-    const updatedAlarm = await this.alarmRepository.update(alarm)
+    const updatedAlarm = await this.alarmRepository.update(alarm) // Atualiza o alarme no repositório
 
-    return toAlarmDTO(updatedAlarm)
+    return toAlarmDTO(updatedAlarm) // Retorna o alarme atualizado como um DTO
   }
 }

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import { InvalidAlarmCoordinatesError } from '../errors/invalid-alarm-coordinates-error'
 import { InvalidAlarmDescriptionError } from '../errors/invalid-alarm-description-error'
 import { InvalidAlarmRadiusError } from '../errors/invalid-alarm-radius-error'
@@ -29,7 +29,7 @@ export class Alarm {
   public readonly createdAt: Date
 
   private constructor(props: AlarmProps) {
-    this.id = props.id ?? uuidv4()
+    this.id = props.id ?? randomUUID()
     this.userId = props.userId
     this.title = props.title.trim()
     this.description = props.description?.trim() || null
@@ -88,7 +88,7 @@ export class Alarm {
     this.radius = updatedProps.radius
   }
 
-  toggleStatus(): void {
+  toggleStatus(): void { // Alterna o status do alarme (on/off)
     this.isActive = !this.isActive
   }
   

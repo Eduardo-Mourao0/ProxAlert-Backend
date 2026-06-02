@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, HttpCode, Patch, Post, Req, UseGuards } from '@nestjs/common'
 import { createUserBodySchema, upgradeUserBodySchema, changeUserPasswordBodySchema } from '../validators/user.validator'
 import { UserService } from '../services/user.service'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
@@ -8,7 +8,7 @@ import type { AuthenticatedRequest } from '../guards/jwt-auth.guard'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('/create')
+  @Post()
   @HttpCode(201)
   async create(@Body() body: unknown) {
     const data = createUserBodySchema.parse(body)
@@ -16,7 +16,7 @@ export class UserController {
     return this.userService.create(data)
   }
 
-  @Post('/upgrade')
+  @Patch('/me')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   async update(@Body() body: unknown, @Req() request: AuthenticatedRequest) {
@@ -28,7 +28,7 @@ export class UserController {
     })
   }
 
-  @Post('/change-password')
+  @Patch('/me/password')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   async changePassword(@Body() body: unknown, @Req() request: AuthenticatedRequest) {
@@ -40,7 +40,7 @@ export class UserController {
     })
   }
 
-  @Post('/delete')
+  @Delete('/me')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   async delete(@Req() request: AuthenticatedRequest) {

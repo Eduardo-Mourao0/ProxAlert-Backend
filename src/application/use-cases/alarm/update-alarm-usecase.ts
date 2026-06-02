@@ -23,11 +23,11 @@ export class UpdateAlarmUseCase {
     async execute(request: UpdateAlarmRequest): Promise<AlarmDTO> {
         const alarm = await this.alarmRepository.findById(request.alarmId); // Busca o alarme pelo ID
 
-        if (!alarm || alarm.userId !== request.userId) {
+        if (!alarm || alarm.userId !== request.userId) { // Verifica se o alarme existe e se pertence ao usuário que está tentando alterá-lo
             throw new BusinessError('Alarm not found.', 404)
         }
 
-        alarm.update({
+        alarm.update({ // Atualiza os campos do alarme com os valores fornecidos na requisição, se eles existirem
             title: request.title,
             description: request.description,
             latitude: request.latitude,

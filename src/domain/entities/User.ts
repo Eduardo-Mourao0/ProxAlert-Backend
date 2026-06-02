@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import { InvalidEmailError } from '../errors/invalid-email-error'
 import { InvalidNameError } from '../errors/invalid-name-error'
 import { InvalidPlanError } from '../errors/invalid-plan-error'
@@ -6,7 +6,7 @@ import { InvalidPasswordError } from '../errors/invalid-password-error'
 
 export enum Plan {
   FREE = 'FREE',
-  PREMIUM = 'PREMIUM'
+  PREMIUM = 'PREMIUM',
 }
 
 export interface UserProps {
@@ -29,7 +29,7 @@ export class User {
   public readonly createdAt: Date
 
   private constructor(props: UserProps) {
-    this.id = props.id ?? uuidv4()
+    this.id = props.id ?? randomUUID()
     this.name = props.name.trim()
     this.email = props.email.trim().toLowerCase()
     this.password = props.password
@@ -38,27 +38,30 @@ export class User {
     this.createdAt = props.createdAt ?? new Date()
   }
 
-  static create(props: UserProps): User { // Cria um usuário a partir de propriedades
-    
-    if (!props.name || props.name.trim().length === 0) { // Valida se o nome não está vazio ou apenas com espaços
-      throw new InvalidNameError();
-    }
-    if (!props.password || props.password.trim().length < 4) { // Valida se a senha tem pelo menos 4 caracteres
-      throw new InvalidPasswordError();
+  static create(props: UserProps): User {
+    const email = props.email?.trim().toLowerCase()
+
+    if (!props.name || props.name.trim().length === 0) {
+      throw new InvalidNameError()
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/   
-    if (!props.email || !emailRegex.test(props.email)) { // Valida se o email é válido usando uma expressão regular simples
-      throw new InvalidEmailError(props.email);
+    if (!props.password || props.password.trim().length < 4) {
+      throw new InvalidPasswordError()
     }
-    if (props.plan && !Object.values(Plan).includes(props.plan)) { // Valida se o plano é valido
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !emailRegex.test(email)) {
+      throw new InvalidEmailError(props.email)
+    }
+
+    if (props.plan && !Object.values(Plan).includes(props.plan)) {
       throw new InvalidPlanError(props.plan)
     }
 
     return new User(props)
   }
 
-  static createFromPrimitives(data: { // Cria um usuário a partir de dados primitivos
+  static createFromPrimitives(data: {
     id: string
     name: string
     email: string
@@ -70,7 +73,7 @@ export class User {
     return new User(data)
   }
 
-  isPremium(): boolean { // Verifica se o usuário é premium
+  isPremium(): boolean {
     return this.plan === Plan.PREMIUM
   }
 }
