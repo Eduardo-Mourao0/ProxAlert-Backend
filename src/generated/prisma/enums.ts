@@ -24,3 +24,21 @@ export const LogLevel = {
 } as const
 
 export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel]
+
+
+export const PaymentProvider = {
+  APPLE: 'APPLE',
+  GOOGLE: 'GOOGLE'
+} as const
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
+
+export const SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELED: 'CANCELED',
+  EXPIRED: 'EXPIRED',
+  PAST_DUE: 'PAST_DUE'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]

@@ -28,6 +28,11 @@ export type User = Prisma.UserModel
  */
 export type Alarm = Prisma.AlarmModel
 /**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel
+/**
  * Model Log
  * 
  */

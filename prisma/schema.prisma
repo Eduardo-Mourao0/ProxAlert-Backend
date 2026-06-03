@@ -27,6 +27,7 @@ model User {
   refreshTokenHash String?
   plan             Plan     @default(FREE)
   alarms Alarm[]
+  subscriptions Subscription[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
@@ -44,6 +45,32 @@ model Alarm {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Subscription {
+  id                      String   @id
+  userId                  String
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider                PaymentProvider
+  providerSubscriptionId  String?
+  providerTransactionId   String?
+  status                  SubscriptionStatus
+  plan                    Plan
+  expiresAt               DateTime?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+enum PaymentProvider {
+  APPLE
+  GOOGLE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+  PAST_DUE
 }
 
 model Log {

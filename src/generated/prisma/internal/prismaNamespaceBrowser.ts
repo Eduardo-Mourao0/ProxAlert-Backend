@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Alarm: 'Alarm',
+  Subscription: 'Subscription',
   Log: 'Log'
 } as const
 
@@ -101,6 +102,22 @@ export const AlarmScalarFieldEnum = {
 } as const
 
 export type AlarmScalarFieldEnum = (typeof AlarmScalarFieldEnum)[keyof typeof AlarmScalarFieldEnum]
+
+
+export const SubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  provider: 'provider',
+  providerSubscriptionId: 'providerSubscriptionId',
+  providerTransactionId: 'providerTransactionId',
+  status: 'status',
+  plan: 'plan',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
 export const LogScalarFieldEnum = {
