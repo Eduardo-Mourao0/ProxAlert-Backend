@@ -96,4 +96,28 @@ describe('Subscription entity', () => {
     expect(subscription.status).toBe(SubscriptionStatus.EXPIRED)
     expect(subscription.isActive()).toBe(false)
   })
+
+  it('updates data from a verified purchase', () => {
+    const subscription = Subscription.create({
+      ...validSubscriptionProps,
+      providerSubscriptionId: 'old-subscription-id',
+      providerTransactionId: 'old-transaction-id',
+      status: SubscriptionStatus.PAST_DUE,
+      expiresAt: new Date('2020-01-01T00:00:00.000Z'),
+    })
+
+    subscription.updateFromVerifiedPurchase({
+      providerSubscriptionId: 'new-subscription-id',
+      providerTransactionId: 'new-transaction-id',
+      status: SubscriptionStatus.ACTIVE,
+      expiresAt: new Date('2031-01-01T00:00:00.000Z'),
+    })
+
+    expect(subscription.providerSubscriptionId).toBe('new-subscription-id')
+    expect(subscription.providerTransactionId).toBe('new-transaction-id')
+    expect(subscription.status).toBe(SubscriptionStatus.ACTIVE)
+    expect(subscription.expiresAt).toEqual(
+      new Date('2031-01-01T00:00:00.000Z'),
+    )
+  })
 })

@@ -13,7 +13,7 @@ export class PrismaSubscriptionRepository implements SubscriptionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(subscription: Subscription): Promise<Subscription> {
-    const createdSubscription = await this.prisma.subscription.create({
+    const createdSubscription = await this.prisma.client.subscription.create({
       data: {
         id: subscription.id,
         userId: subscription.userId,
@@ -32,7 +32,7 @@ export class PrismaSubscriptionRepository implements SubscriptionRepository {
   }
 
   async update(subscription: Subscription): Promise<Subscription> {
-    const updatedSubscription = await this.prisma.subscription.update({
+    const updatedSubscription = await this.prisma.client.subscription.update({
       where: { id: subscription.id },
       data: {
         provider: subscription.provider,
@@ -49,7 +49,7 @@ export class PrismaSubscriptionRepository implements SubscriptionRepository {
   }
 
   async findById(id: string): Promise<Subscription | null> {
-    const subscription = await this.prisma.subscription.findUnique({
+    const subscription = await this.prisma.client.subscription.findUnique({
       where: { id },
     })
 
@@ -59,7 +59,7 @@ export class PrismaSubscriptionRepository implements SubscriptionRepository {
   }
 
   async findActiveByUserId(userId: string): Promise<Subscription | null> {
-    const subscription = await this.prisma.subscription.findFirst({
+    const subscription = await this.prisma.client.subscription.findFirst({
       where: {
         userId,
         status: SubscriptionStatus.ACTIVE,
@@ -77,7 +77,7 @@ export class PrismaSubscriptionRepository implements SubscriptionRepository {
     provider: PaymentProvider,
     providerTransactionId: string,
   ): Promise<Subscription | null> {
-    const subscription = await this.prisma.subscription.findFirst({
+    const subscription = await this.prisma.client.subscription.findFirst({
       where: {
         provider,
         providerTransactionId,

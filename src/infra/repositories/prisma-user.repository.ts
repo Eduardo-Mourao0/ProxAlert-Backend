@@ -8,7 +8,7 @@ export class PrismaUserRepository implements UserRepository {
     constructor(private prisma: PrismaService) {}
 
     async create(user: User): Promise<User> { // Cria o usuário no banco de dados usando o Prisma
-        const createdUser = await this.prisma.user.create({
+        const createdUser = await this.prisma.client.user.create({
             data: {
                 id: user.id,
                 name: user.name,
@@ -23,7 +23,7 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async findByEmail(email: string): Promise<User | null> { // Busca um usuário pelo email usando o Prisma
-        const user = await this.prisma.user.findUnique({
+        const user = await this.prisma.client.user.findUnique({
             where: { email },
         })
 
@@ -35,7 +35,7 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async findById(id: string): Promise<User | null> { // Busca um usuário pelo id usando o Prisma
-        const user = await this.prisma.user.findUnique({
+        const user = await this.prisma.client.user.findUnique({
             where: { id },
         })
 
@@ -47,7 +47,7 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async update(user: User): Promise<User> { // Atualiza o usuário no banco de dados usando o Prisma
-        const updatedUser = await this.prisma.user.update({
+        const updatedUser = await this.prisma.client.user.update({
             where: { id: user.id },
             data: {
                 name: user.name,
@@ -62,20 +62,20 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async updateRefreshToken(userId: string, refreshTokenHash: string | null): Promise<void> {
-        await this.prisma.user.update({
+        await this.prisma.client.user.update({
             where: { id: userId },
             data: { refreshTokenHash },
         })
     }
 
     async findAll(): Promise<User[]> { // Busca todos os usuários usando o Prisma
-        const users = await this.prisma.user.findMany()
+        const users = await this.prisma.client.user.findMany()
 
         return users.map((user) => this.toDomain(user))
     }
 
     async delete(id: string): Promise<void> { // Deleta o usuário do banco de dados usando o Prisma
-        await this.prisma.user.delete({
+        await this.prisma.client.user.delete({
             where: { id },
         })
     }

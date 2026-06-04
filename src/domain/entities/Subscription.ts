@@ -5,6 +5,7 @@ import { InvalidSubscriptionPlanError } from '../errors/invalid-subscription-pla
 import { InvalidSubscriptionProviderError } from '../errors/invalid-subscription-provider-error'
 import { InvalidSubscriptionStatusError } from '../errors/invalid-subscription-status-error'
 import { InvalidSubscriptionUserError } from '../errors/invalid-subscription-user-error'
+import type { VerifiedSubscriptionPurchase } from '../services/subscription-payment-service'
 
 export enum PaymentProvider {
   APPLE = 'APPLE',
@@ -107,6 +108,17 @@ export class Subscription {
   renew(expiresAt: Date): void {
     this.status = SubscriptionStatus.ACTIVE
     this.expiresAt = expiresAt
+    this.touch()
+  }
+
+  updateFromVerifiedPurchase(
+    verifiedPurchase: VerifiedSubscriptionPurchase,
+  ): void {
+    this.providerSubscriptionId =
+      verifiedPurchase.providerSubscriptionId ?? null
+    this.providerTransactionId = verifiedPurchase.providerTransactionId
+    this.status = verifiedPurchase.status
+    this.expiresAt = verifiedPurchase.expiresAt ?? null
     this.touch()
   }
 

@@ -8,7 +8,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(alarm: Alarm): Promise<Alarm> {
-    const createdAlarm = await this.prisma.alarm.create({
+    const createdAlarm = await this.prisma.client.alarm.create({
       data: {
         id: alarm.id,
         userId: alarm.userId,
@@ -27,7 +27,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
   }
 
   async findById(id: string): Promise<Alarm | null> {
-    const alarm = await this.prisma.alarm.findUnique({
+    const alarm = await this.prisma.client.alarm.findUnique({
       where: { id },
     })
 
@@ -37,7 +37,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
   }
 
   async findByUserId(userId: string): Promise<Alarm[]> {
-    const alarms = await this.prisma.alarm.findMany({
+    const alarms = await this.prisma.client.alarm.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     })
@@ -46,13 +46,13 @@ export class PrismaAlarmRepository implements AlarmRepository {
   }
 
   async countByUserId(userId: string): Promise<number> {
-    return this.prisma.alarm.count({
+    return this.prisma.client.alarm.count({
       where: { userId },
     })
   }
 
   async update(alarm: Alarm): Promise<Alarm> {
-    const updatedAlarm = await this.prisma.alarm.update({
+    const updatedAlarm = await this.prisma.client.alarm.update({
       where: { id: alarm.id },
       data: {
         title: alarm.title,
@@ -69,7 +69,7 @@ export class PrismaAlarmRepository implements AlarmRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.alarm.delete({
+    await this.prisma.client.alarm.delete({
       where: { id },
     })
   }

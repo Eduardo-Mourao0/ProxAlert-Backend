@@ -12,9 +12,11 @@ import type {
   VerifiedSubscriptionPurchase,
   VerifySubscriptionPurchaseRequest,
 } from '../../../../../src/domain/services/subscription-payment-service'
+import type { TransactionManager } from '../../../../../src/domain/services/transaction-manager'
 
 class FakeUserRepository implements UserRepository {
   users: User[] = []
+  updateCalls = 0
 
   async create(user: User): Promise<User> {
     this.users.push(user)
@@ -30,6 +32,7 @@ class FakeUserRepository implements UserRepository {
   }
 
   async update(user: User): Promise<User> {
+    this.updateCalls += 1
     this.users = this.users.map((currentUser) =>
       currentUser.id === user.id ? user : currentUser,
     )
@@ -116,6 +119,15 @@ class FakeSubscriptionPaymentService implements SubscriptionPaymentService {
   }
 }
 
+class FakeTransactionManager implements TransactionManager {
+  runCalls = 0
+
+  async run<T>(callback: () => Promise<T>): Promise<T> {
+    this.runCalls += 1
+    return callback()
+  }
+}
+
 function makeUser(plan = Plan.FREE) {
   return User.createFromPrimitives({
     id: 'user-id',
@@ -131,16 +143,19 @@ describe('ConfirmSubscriptionPurchaseUseCase', () => {
   let userRepository: FakeUserRepository
   let subscriptionRepository: FakeSubscriptionRepository
   let paymentService: FakeSubscriptionPaymentService
+  let transactionManager: FakeTransactionManager
   let useCase: ConfirmSubscriptionPurchaseUseCase
 
   beforeEach(() => {
     userRepository = new FakeUserRepository()
     subscriptionRepository = new FakeSubscriptionRepository()
     paymentService = new FakeSubscriptionPaymentService()
+    transactionManager = new FakeTransactionManager()
     useCase = new ConfirmSubscriptionPurchaseUseCase(
       userRepository,
       subscriptionRepository,
       paymentService,
+      transactionManager,
     )
   })
 
@@ -161,6 +176,7 @@ describe('ConfirmSubscriptionPurchaseUseCase', () => {
     expect(result.subscription.status).toBe(SubscriptionStatus.ACTIVE)
     expect(subscriptionRepository.subscriptions).toHaveLength(1)
     expect(userRepository.users[0].plan).toBe(Plan.PREMIUM)
+    expect(transactionManager.runCalls).toBe(1)
   })
 
   it('confirms an inactive purchase and keeps the user free', async () => {
@@ -181,6 +197,38 @@ describe('ConfirmSubscriptionPurchaseUseCase', () => {
     expect(result.user.plan).toBe(Plan.FREE)
     expect(result.subscription.status).toBe(SubscriptionStatus.EXPIRED)
     expect(userRepository.users[0].plan).toBe(Plan.FREE)
+  })
+
+  it('does not update the user when the plan is already premium', async () => {
+    userRepository.users.push(makeUser(Plan.PREMIUM))
+
+    const result = await useCase.execute({
+      userId: 'user-id',
+      provider: PaymentProvider.GOOGLE,
+      purchaseToken: 'purchase-token',
+    })
+
+    expect(result.user.plan).toBe(Plan.PREMIUM)
+    expect(userRepository.updateCalls).toBe(0)
+  })
+
+  it('does not update the user when the plan is already free', async () => {
+    userRepository.users.push(makeUser(Plan.FREE))
+    paymentService.verifiedPurchase = {
+      providerSubscriptionId: 'provider-subscription-id',
+      providerTransactionId: 'provider-transaction-id',
+      status: SubscriptionStatus.EXPIRED,
+      expiresAt: new Date('2020-01-01T00:00:00.000Z'),
+    }
+
+    const result = await useCase.execute({
+      userId: 'user-id',
+      provider: PaymentProvider.APPLE,
+      purchaseToken: 'purchase-token',
+    })
+
+    expect(result.user.plan).toBe(Plan.FREE)
+    expect(userRepository.updateCalls).toBe(0)
   })
 
   it('updates an existing subscription from the same provider transaction', async () => {
