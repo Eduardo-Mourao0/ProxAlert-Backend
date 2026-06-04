@@ -3,7 +3,7 @@ import {
   PaymentProvider,
   Subscription,
 } from '../../../domain/entities/Subscription'
-import { Plan } from '../../../domain/entities/User'
+import { Plan, User } from '../../../domain/entities/User'
 import { BusinessError } from '../../../domain/errors/business-error'
 import {
   SUBSCRIPTION_REPOSITORY,
@@ -54,62 +54,51 @@ export class ConfirmSubscriptionPurchaseUseCase {
 
     if (!user) throw new BusinessError('User not found', 404)
 
-    const verifiedPurchase = await this.subscriptionPaymentService.verifyPurchase(
-      {
-        provider: request.provider,
-        purchaseToken: request.purchaseToken,
-      },
-    )
+    const verifiedPurchase = await this.subscriptionPaymentService.verifyPurchase({
+      provider: request.provider,
+      purchaseToken: request.purchaseToken,
+    })
 
     return this.transactionManager.run(() =>
-      this.confirmVerifiedPurchase(request, verifiedPurchase),
+      this.confirmVerifiedPurchase(user, request, verifiedPurchase),
     )
   }
 
   private async confirmVerifiedPurchase(
+    user: User,
     request: ConfirmSubscriptionPurchaseRequest,
-    verifiedPurchase: {
-      providerSubscriptionId?: string | null
-      providerTransactionId: string
-      status: Subscription['status']
-      expiresAt?: Date | null
-    },
+    verifiedPurchase: VerifiedSubscriptionPurchase,
   ): Promise<ConfirmSubscriptionPurchaseDTO> {
-    const user = await this.userRepository.findById(request.userId)
-
-    if (!user) throw new BusinessError('User not found', 404)
-
     const existingSubscription =
       await this.subscriptionRepository.findByProviderTransaction(
         request.provider,
         verifiedPurchase.providerTransactionId,
       )
 
-    const subscription = existingSubscription
-      ? this.updateExistingSubscription(existingSubscription, verifiedPurchase)
-      : Subscription.create({
-        userId: user.id,
-        provider: request.provider,
-        providerSubscriptionId: verifiedPurchase.providerSubscriptionId,
-        providerTransactionId: verifiedPurchase.providerTransactionId,
-        status: verifiedPurchase.status,
-        plan: Plan.PREMIUM,
-        expiresAt: verifiedPurchase.expiresAt,
-      })
+    if (existingSubscription) {
+      existingSubscription.updateFromVerifiedPurchase(verifiedPurchase)
+    }
+
+    const subscription = existingSubscription ?? Subscription.create({
+      userId: user.id,
+      provider: request.provider,
+      providerSubscriptionId: verifiedPurchase.providerSubscriptionId,
+      providerTransactionId: verifiedPurchase.providerTransactionId,
+      status: verifiedPurchase.status,
+      plan: Plan.PREMIUM,
+      expiresAt: verifiedPurchase.expiresAt,
+    })
 
     const savedSubscription = existingSubscription
       ? await this.subscriptionRepository.update(subscription)
       : await this.subscriptionRepository.create(subscription)
 
-    const shouldBePremium = savedSubscription.isActive()
     let updatedUser = user
 
-    if (shouldBePremium && !user.isPremium()) {
+    if (savedSubscription.isActive() && !user.isPremium()) {
       user.upgradeToPremium()
       updatedUser = await this.userRepository.update(user)
-    }
-
-    if (!shouldBePremium && user.isPremium()) {
+    } else if (!savedSubscription.isActive() && user.isPremium()) {
       user.downgradeToFree()
       updatedUser = await this.userRepository.update(user)
     }
@@ -117,15 +106,6 @@ export class ConfirmSubscriptionPurchaseUseCase {
     return {
       user: toUserDTO(updatedUser),
       subscription: toSubscriptionDTO(savedSubscription),
-    }
-  }
-
-  private updateExistingSubscription(
-    subscription: Subscription,
-    verifiedPurchase: VerifiedSubscriptionPurchase,
-  ): Subscription {
-    subscription.updateFromVerifiedPurchase(verifiedPurchase)
-
-    return subscription
+    } 
   }
 }

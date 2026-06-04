@@ -5,10 +5,11 @@ import { Logger } from './infra/log/logger'
 import { HttpExceptionFilter } from './presentation/http/middlewares/http-exception.filter'
 import { AlarmModule } from './alarm.module'
 import { AuthModule } from './auth.module'
+import { SubscriptionModule } from './subscription.module'
 import { UserModule } from './user.module'
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, AlarmModule],
+  imports: [PrismaModule, UserModule, AuthModule, AlarmModule, SubscriptionModule],
   controllers: [],
   providers: [
     Logger,
