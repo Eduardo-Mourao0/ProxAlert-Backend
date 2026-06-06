@@ -7,6 +7,7 @@ describe('SubscriptionController', () => {
   it('confirms a subscription using the authenticated user id', async () => {
     const service = {
       confirmPurchase: jest.fn().mockResolvedValue({ ok: true }),
+      handleStoreNotification: jest.fn(),
     }
     const controller = new SubscriptionController(service as never)
     const request = {
@@ -34,6 +35,7 @@ describe('SubscriptionController', () => {
   it('rejects userId in the body', () => {
     const service = {
       confirmPurchase: jest.fn(),
+      handleStoreNotification: jest.fn(),
     }
     const controller = new SubscriptionController(service as never)
     const request = {
@@ -58,6 +60,7 @@ describe('SubscriptionController', () => {
   it('rejects invalid subscription payloads', () => {
     const service = {
       confirmPurchase: jest.fn(),
+      handleStoreNotification: jest.fn(),
     }
     const controller = new SubscriptionController(service as never)
     const request = {
@@ -76,5 +79,39 @@ describe('SubscriptionController', () => {
       ),
     ).toThrow(ZodError)
     expect(service.confirmPurchase).not.toHaveBeenCalled()
+  })
+
+  it('handles Google store notifications', async () => {
+    const service = {
+      confirmPurchase: jest.fn(),
+      handleStoreNotification: jest.fn().mockResolvedValue({ processed: true }),
+    }
+    const controller = new SubscriptionController(service as never)
+
+    const result = await controller.handleGoogleNotification({ message: {} })
+
+    expect(result).toEqual({ processed: true })
+    expect(service.handleStoreNotification).toHaveBeenCalledWith({
+      provider: PaymentProvider.GOOGLE,
+      body: { message: {} },
+    })
+  })
+
+  it('handles Apple store notifications', async () => {
+    const service = {
+      confirmPurchase: jest.fn(),
+      handleStoreNotification: jest.fn().mockResolvedValue({ processed: true }),
+    }
+    const controller = new SubscriptionController(service as never)
+
+    const result = await controller.handleAppleNotification({
+      signedPayload: 'signed-payload',
+    })
+
+    expect(result).toEqual({ processed: true })
+    expect(service.handleStoreNotification).toHaveBeenCalledWith({
+      provider: PaymentProvider.APPLE,
+      body: { signedPayload: 'signed-payload' },
+    })
   })
 })

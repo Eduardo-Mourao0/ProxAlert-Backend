@@ -19,6 +19,13 @@ export interface ConfirmSubscriptionPurchaseDTO {
   subscription: SubscriptionDTO
 }
 
+export interface SubscriptionNotificationDTO {
+  processed: boolean
+  user?: UserDTO
+  subscription?: SubscriptionDTO
+  reason?: string
+}
+
 export function toSubscriptionDTO(
   subscription: Subscription,
 ): SubscriptionDTO {
