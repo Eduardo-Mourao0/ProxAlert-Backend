@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common'
 import {
   alarmParamsSchema,
+  checkAlarmProximityBodySchema,
   createAlarmBodySchema,
   updateAlarmBodySchema,
 } from '../validators/alarm.validator'
@@ -45,6 +46,18 @@ export class AlarmController {
   list(@Req() request: AuthenticatedRequest) {
     return this.alarmService.listByUser({
       userId: request.user.id,
+    })
+  }
+
+  @Post('check-proximity')
+  @HttpCode(200)
+  checkProximity(@Body() body: unknown, @Req() request: AuthenticatedRequest) {
+    const data = checkAlarmProximityBodySchema.parse(body)
+
+    return this.alarmService.checkProximity({
+      userId: request.user.id,
+      latitude: data.latitude,
+      longitude: data.longitude,
     })
   }
 

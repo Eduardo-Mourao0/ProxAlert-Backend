@@ -30,3 +30,8 @@ export const updateAlarmBodySchema = z.object({
 export const alarmParamsSchema = z.object({
   alarmId: z.string().uuid('Alarm id invalido.'),
 }).strict()
+
+export const checkAlarmProximityBodySchema = z.object({
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+}).strict()

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
+import { CheckAlarmProximityUseCase } from './application/use-cases/alarm/check-alarm-proximity-usecase'
 import { CreateAlarmUseCase } from './application/use-cases/alarm/create-alarm-usecase'
 import { DeleteAlarmUseCase } from './application/use-cases/alarm/delete-alarm-usecase'
 import { ListUserAlarmUseCase } from './application/use-cases/alarm/list-user-alarm-usecase'
@@ -27,6 +28,7 @@ import { AlarmService } from './presentation/http/services/alarm.service'
     UpdateAlarmUseCase,
     DeleteAlarmUseCase,
     ToggleAlarmStatusUseCase,
+    CheckAlarmProximityUseCase,
     {
       provide: ALARM_REPOSITORY,
       useClass: PrismaAlarmRepository,

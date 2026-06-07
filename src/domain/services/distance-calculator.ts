@@ -8,8 +8,8 @@ export class DistanceCalculator {
 
     static calculateInMeters(from: Coordinates, to: Coordinates): number {
         const fromLatitude = this.toRadians(from.latitude)
-        const toLatitude = this.toRadians(to.longitude)
-
+        const toLatitude = this.toRadians(to.latitude)
+        
         const deltaLatitude = this.toRadians(to.latitude - from.latitude)
         const deltaLongitude = this.toRadians(to.longitude - from.longitude)
 

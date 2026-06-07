@@ -9,6 +9,7 @@ import { APP_FILTER } from '@nestjs/core'
 import { Test, TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import { ZodError } from 'zod'
+import { CheckAlarmProximityUseCase } from '../../src/application/use-cases/alarm/check-alarm-proximity-usecase'
 import { CreateAlarmUseCase } from '../../src/application/use-cases/alarm/create-alarm-usecase'
 import { DeleteAlarmUseCase } from '../../src/application/use-cases/alarm/delete-alarm-usecase'
 import { ListUserAlarmUseCase } from '../../src/application/use-cases/alarm/list-user-alarm-usecase'
@@ -246,6 +247,7 @@ describe('ProxAlert HTTP API (e2e)', () => {
         UpdateAlarmUseCase,
         DeleteAlarmUseCase,
         ToggleAlarmStatusUseCase,
+        CheckAlarmProximityUseCase,
         {
           provide: USER_REPOSITORY,
           useClass: InMemoryUserRepository,
@@ -485,5 +487,33 @@ describe('ProxAlert HTTP API (e2e)', () => {
       .expect(200)
 
     expect(response.body).toHaveLength(4)
+  })
+
+  it('checks proximity and returns triggered alarms', async () => {
+    const { accessToken } = await createUserAndLogin()
+
+    await request(app.getHttpServer())
+      .post('/alarms')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        title: 'Casa',
+        description: null,
+        latitude: -23.5505,
+        longitude: -46.6333,
+        radius: 500,
+      })
+      .expect(201)
+
+    const response = await request(app.getHttpServer())
+      .post('/alarms/check-proximity')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        latitude: -23.5506,
+        longitude: -46.6334,
+      })
+      .expect(200)
+
+    expect(response.body.triggeredAlarms).toHaveLength(1)
+    expect(response.body.triggeredAlarms[0].title).toBe('Casa')
   })
 })
