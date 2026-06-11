@@ -27,6 +27,7 @@ model User {
   refreshTokenHash String?
   plan             Plan     @default(FREE)
   alarms Alarm[]
+  alarmProximityStates AlarmProximityState[]
   subscriptions Subscription[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -43,8 +44,27 @@ model Alarm {
   isActive  Boolean  @default(true)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  proximityStates AlarmProximityState[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AlarmProximityState {
+  id                   String   @id
+  alarmId              String
+  alarm                Alarm    @relation(fields: [alarmId], references: [id], onDelete: Cascade)
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isInsideRadius       Boolean  @default(false)
+  dismissedUntilExit   Boolean  @default(false)
+  lastDistanceInMeters Float?
+  lastTriggeredAt      DateTime?
+  dismissedAt          DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@unique([alarmId, userId])
+  @@index([userId])
 }
 
 model Subscription {

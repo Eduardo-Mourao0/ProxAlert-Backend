@@ -12,6 +12,7 @@ import { ZodError } from 'zod'
 import { CheckAlarmProximityUseCase } from '../../src/application/use-cases/alarm/check-alarm-proximity-usecase'
 import { CreateAlarmUseCase } from '../../src/application/use-cases/alarm/create-alarm-usecase'
 import { DeleteAlarmUseCase } from '../../src/application/use-cases/alarm/delete-alarm-usecase'
+import { DismissAlarmUseCase } from '../../src/application/use-cases/alarm/dismiss-alarm-usecase'
 import { ListUserAlarmUseCase } from '../../src/application/use-cases/alarm/list-user-alarm-usecase'
 import { ToggleAlarmStatusUseCase } from '../../src/application/use-cases/alarm/toggle-alarm-status-usecase'
 import { UpdateAlarmUseCase } from '../../src/application/use-cases/alarm/update-alarm-usecase'
@@ -23,8 +24,13 @@ import { DeleteUserUseCase } from '../../src/application/use-cases/user/delete-u
 import { UpdateUserPlanUseCase } from '../../src/application/use-cases/user/update-user-plan-usecase'
 import { UpdateUserProfileUseCase } from '../../src/application/use-cases/user/update-user-profile-usecase'
 import { Alarm } from '../../src/domain/entities/Alarm'
+import { AlarmProximityState } from '../../src/domain/entities/AlarmProximityState'
 import { User } from '../../src/domain/entities/User'
 import { BusinessError } from '../../src/domain/errors/business-error'
+import {
+  ALARM_PROXIMITY_STATE_REPOSITORY,
+  type AlarmProximityStateRepository,
+} from '../../src/domain/repositories/alarm-proximity-state-repository'
 import {
   ALARM_REPOSITORY,
   type AlarmRepository,
@@ -118,6 +124,40 @@ class InMemoryAlarmRepository implements AlarmRepository {
 
   async delete(id: string): Promise<void> {
     this.alarms = this.alarms.filter((alarm) => alarm.id !== id)
+  }
+}
+
+class InMemoryAlarmProximityStateRepository
+  implements AlarmProximityStateRepository
+{
+  states: AlarmProximityState[] = []
+
+  async findByAlarmIdAndUserId(
+    alarmId: string,
+    userId: string,
+  ): Promise<AlarmProximityState | null> {
+    return (
+      this.states.find(
+        (state) => state.alarmId === alarmId && state.userId === userId,
+      ) ?? null
+    )
+  }
+
+  async save(state: AlarmProximityState): Promise<AlarmProximityState> {
+    const currentState = await this.findByAlarmIdAndUserId(
+      state.alarmId,
+      state.userId,
+    )
+
+    if (!currentState) {
+      this.states.push(state)
+      return state
+    }
+
+    this.states = this.states.map((storedState) =>
+      storedState.id === state.id ? state : storedState,
+    )
+    return state
   }
 }
 
@@ -248,6 +288,7 @@ describe('ProxAlert HTTP API (e2e)', () => {
         DeleteAlarmUseCase,
         ToggleAlarmStatusUseCase,
         CheckAlarmProximityUseCase,
+        DismissAlarmUseCase,
         {
           provide: USER_REPOSITORY,
           useClass: InMemoryUserRepository,
@@ -255,6 +296,10 @@ describe('ProxAlert HTTP API (e2e)', () => {
         {
           provide: ALARM_REPOSITORY,
           useClass: InMemoryAlarmRepository,
+        },
+        {
+          provide: ALARM_PROXIMITY_STATE_REPOSITORY,
+          useClass: InMemoryAlarmProximityStateRepository,
         },
         {
           provide: PASSWORD_HASHER,
@@ -489,10 +534,10 @@ describe('ProxAlert HTTP API (e2e)', () => {
     expect(response.body).toHaveLength(4)
   })
 
-  it('checks proximity and returns triggered alarms', async () => {
+  it('checks proximity and returns triggered alarms until dismissed', async () => {
     const { accessToken } = await createUserAndLogin()
 
-    await request(app.getHttpServer())
+    const alarmResponse = await request(app.getHttpServer())
       .post('/alarms')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -503,8 +548,9 @@ describe('ProxAlert HTTP API (e2e)', () => {
         radius: 500,
       })
       .expect(201)
+    const alarmId = alarmResponse.body.id as string
 
-    const response = await request(app.getHttpServer())
+    const firstCheckResponse = await request(app.getHttpServer())
       .post('/alarms/check-proximity')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -513,7 +559,45 @@ describe('ProxAlert HTTP API (e2e)', () => {
       })
       .expect(200)
 
-    expect(response.body.triggeredAlarms).toHaveLength(1)
-    expect(response.body.triggeredAlarms[0].title).toBe('Casa')
+    expect(firstCheckResponse.body.triggeredAlarms).toHaveLength(1)
+    expect(firstCheckResponse.body.triggeredAlarms[0].title).toBe('Casa')
+
+    await request(app.getHttpServer())
+      .post(`/alarms/${alarmId}/dismiss`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+
+    const stillInsideResponse = await request(app.getHttpServer())
+      .post('/alarms/check-proximity')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        latitude: -23.5506,
+        longitude: -46.6334,
+      })
+      .expect(200)
+
+    expect(stillInsideResponse.body.triggeredAlarms).toEqual([])
+
+    const outsideResponse = await request(app.getHttpServer())
+      .post('/alarms/check-proximity')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        latitude: -23.7,
+        longitude: -46.8,
+      })
+      .expect(200)
+
+    expect(outsideResponse.body.triggeredAlarms).toEqual([])
+
+    const reentryResponse = await request(app.getHttpServer())
+      .post('/alarms/check-proximity')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        latitude: -23.5506,
+        longitude: -46.6334,
+      })
+      .expect(200)
+
+    expect(reentryResponse.body.triggeredAlarms).toHaveLength(1)
   })
 })

@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Alarm: 'Alarm',
+  AlarmProximityState: 'AlarmProximityState',
   Subscription: 'Subscription',
   Log: 'Log'
 } as const
@@ -102,6 +103,22 @@ export const AlarmScalarFieldEnum = {
 } as const
 
 export type AlarmScalarFieldEnum = (typeof AlarmScalarFieldEnum)[keyof typeof AlarmScalarFieldEnum]
+
+
+export const AlarmProximityStateScalarFieldEnum = {
+  id: 'id',
+  alarmId: 'alarmId',
+  userId: 'userId',
+  isInsideRadius: 'isInsideRadius',
+  dismissedUntilExit: 'dismissedUntilExit',
+  lastDistanceInMeters: 'lastDistanceInMeters',
+  lastTriggeredAt: 'lastTriggeredAt',
+  dismissedAt: 'dismissedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlarmProximityStateScalarFieldEnum = (typeof AlarmProximityStateScalarFieldEnum)[keyof typeof AlarmProximityStateScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {

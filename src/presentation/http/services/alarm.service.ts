@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { CheckAlarmProximityRequest, CheckAlarmProximityUseCase } from '../../../application/use-cases/alarm/check-alarm-proximity-usecase'
 import { CreateAlarmRequest, CreateAlarmUseCase } from '../../../application/use-cases/alarm/create-alarm-usecase'
 import { DeleteAlarmRequest, DeleteAlarmUseCase } from '../../../application/use-cases/alarm/delete-alarm-usecase'
+import { DismissAlarmRequest, DismissAlarmUseCase } from '../../../application/use-cases/alarm/dismiss-alarm-usecase'
 import { ListUserAlarmRequest, ListUserAlarmUseCase } from '../../../application/use-cases/alarm/list-user-alarm-usecase'
 import { ToggleAlarmStatusRequest, ToggleAlarmStatusUseCase } from '../../../application/use-cases/alarm/toggle-alarm-status-usecase'
 import { UpdateAlarmRequest, UpdateAlarmUseCase } from '../../../application/use-cases/alarm/update-alarm-usecase'
@@ -15,6 +16,7 @@ export class AlarmService {
     private readonly deleteAlarmUseCase: DeleteAlarmUseCase,
     private readonly toggleAlarmStatusUseCase: ToggleAlarmStatusUseCase,
     private readonly checkAlarmProximityUseCase: CheckAlarmProximityUseCase,
+    private readonly dismissAlarmUseCase: DismissAlarmUseCase,
   ) {}
 
   create(data: CreateAlarmRequest) {
@@ -39,5 +41,9 @@ export class AlarmService {
 
   checkProximity(data: CheckAlarmProximityRequest) {
     return this.checkAlarmProximityUseCase.execute(data)
+  }
+
+  dismiss(data: DismissAlarmRequest) {
+    return this.dismissAlarmUseCase.execute(data)
   }
 }

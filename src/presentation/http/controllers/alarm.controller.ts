@@ -63,11 +63,7 @@ export class AlarmController {
 
   @Patch(':alarmId')
   @HttpCode(200)
-  update(
-    @Param() params: unknown,
-    @Body() body: unknown,
-    @Req() request: AuthenticatedRequest,
-  ) {
+  update(@Param() params: unknown, @Body() body: unknown, @Req() request: AuthenticatedRequest) {
     const { alarmId } = alarmParamsSchema.parse(params)
     const data = updateAlarmBodySchema.parse(body)
 
@@ -84,6 +80,17 @@ export class AlarmController {
     const { alarmId } = alarmParamsSchema.parse(params)
 
     return this.alarmService.toggleStatus({
+      alarmId,
+      userId: request.user.id,
+    })
+  }
+
+  @Post(':alarmId/dismiss')
+  @HttpCode(200)
+  dismiss(@Param() params: unknown, @Req() request: AuthenticatedRequest) {
+    const { alarmId } = alarmParamsSchema.parse(params)
+
+    return this.alarmService.dismiss({
       alarmId,
       userId: request.user.id,
     })

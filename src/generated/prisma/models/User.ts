@@ -207,6 +207,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   alarms?: Prisma.AlarmListRelationFilter
+  alarmProximityStates?: Prisma.AlarmProximityStateListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
 }
 
@@ -220,6 +221,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   alarms?: Prisma.AlarmOrderByRelationAggregateInput
+  alarmProximityStates?: Prisma.AlarmProximityStateOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
 }
 
@@ -236,6 +238,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   alarms?: Prisma.AlarmListRelationFilter
+  alarmProximityStates?: Prisma.AlarmProximityStateListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
 }, "id" | "email">
 
@@ -277,6 +280,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
+  alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
 }
 
@@ -290,6 +294,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -303,6 +308,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
 }
 
@@ -316,6 +322,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -420,6 +427,20 @@ export type UserUpdateOneRequiredWithoutAlarmsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAlarmsInput, Prisma.UserUpdateWithoutAlarmsInput>, Prisma.UserUncheckedUpdateWithoutAlarmsInput>
 }
 
+export type UserCreateNestedOneWithoutAlarmProximityStatesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAlarmProximityStatesInput, Prisma.UserUncheckedCreateWithoutAlarmProximityStatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlarmProximityStatesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAlarmProximityStatesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAlarmProximityStatesInput, Prisma.UserUncheckedCreateWithoutAlarmProximityStatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlarmProximityStatesInput
+  upsert?: Prisma.UserUpsertWithoutAlarmProximityStatesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAlarmProximityStatesInput, Prisma.UserUpdateWithoutAlarmProximityStatesInput>, Prisma.UserUncheckedUpdateWithoutAlarmProximityStatesInput>
+}
+
 export type UserCreateNestedOneWithoutSubscriptionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionsInput
@@ -443,6 +464,7 @@ export type UserCreateWithoutAlarmsInput = {
   plan?: $Enums.Plan
   createdAt?: Date | string
   updatedAt?: Date | string
+  alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
 }
 
@@ -455,6 +477,7 @@ export type UserUncheckedCreateWithoutAlarmsInput = {
   plan?: $Enums.Plan
   createdAt?: Date | string
   updatedAt?: Date | string
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -483,6 +506,7 @@ export type UserUpdateWithoutAlarmsInput = {
   plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
 }
 
@@ -495,6 +519,75 @@ export type UserUncheckedUpdateWithoutAlarmsInput = {
   plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAlarmProximityStatesInput = {
+  id: string
+  name: string
+  email: string
+  password: string
+  refreshTokenHash?: string | null
+  plan?: $Enums.Plan
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAlarmProximityStatesInput = {
+  id: string
+  name: string
+  email: string
+  password: string
+  refreshTokenHash?: string | null
+  plan?: $Enums.Plan
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAlarmProximityStatesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAlarmProximityStatesInput, Prisma.UserUncheckedCreateWithoutAlarmProximityStatesInput>
+}
+
+export type UserUpsertWithoutAlarmProximityStatesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAlarmProximityStatesInput, Prisma.UserUncheckedUpdateWithoutAlarmProximityStatesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAlarmProximityStatesInput, Prisma.UserUncheckedCreateWithoutAlarmProximityStatesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAlarmProximityStatesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAlarmProximityStatesInput, Prisma.UserUncheckedUpdateWithoutAlarmProximityStatesInput>
+}
+
+export type UserUpdateWithoutAlarmProximityStatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAlarmProximityStatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -508,6 +601,7 @@ export type UserCreateWithoutSubscriptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
+  alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -520,6 +614,7 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -548,6 +643,7 @@ export type UserUpdateWithoutSubscriptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -560,6 +656,7 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -569,11 +666,13 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
 
 export type UserCountOutputType = {
   alarms: number
+  alarmProximityStates: number
   subscriptions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   alarms?: boolean | UserCountOutputTypeCountAlarmsArgs
+  alarmProximityStates?: boolean | UserCountOutputTypeCountAlarmProximityStatesArgs
   subscriptions?: boolean | UserCountOutputTypeCountSubscriptionsArgs
 }
 
@@ -597,6 +696,13 @@ export type UserCountOutputTypeCountAlarmsArgs<ExtArgs extends runtime.Types.Ext
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountAlarmProximityStatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AlarmProximityStateWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SubscriptionWhereInput
 }
@@ -612,6 +718,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   alarms?: boolean | Prisma.User$alarmsArgs<ExtArgs>
+  alarmProximityStates?: boolean | Prisma.User$alarmProximityStatesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -652,6 +759,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "refreshTokenHash" | "plan" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   alarms?: boolean | Prisma.User$alarmsArgs<ExtArgs>
+  alarmProximityStates?: boolean | Prisma.User$alarmProximityStatesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -662,6 +770,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     alarms: Prisma.$AlarmPayload<ExtArgs>[]
+    alarmProximityStates: Prisma.$AlarmProximityStatePayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1068,6 +1177,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   alarms<T extends Prisma.User$alarmsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  alarmProximityStates<T extends Prisma.User$alarmProximityStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmProximityStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmProximityStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.User$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1520,6 +1630,30 @@ export type User$alarmsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.AlarmScalarFieldEnum | Prisma.AlarmScalarFieldEnum[]
+}
+
+/**
+ * User.alarmProximityStates
+ */
+export type User$alarmProximityStatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlarmProximityState
+   */
+  select?: Prisma.AlarmProximityStateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AlarmProximityState
+   */
+  omit?: Prisma.AlarmProximityStateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlarmProximityStateInclude<ExtArgs> | null
+  where?: Prisma.AlarmProximityStateWhereInput
+  orderBy?: Prisma.AlarmProximityStateOrderByWithRelationInput | Prisma.AlarmProximityStateOrderByWithRelationInput[]
+  cursor?: Prisma.AlarmProximityStateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AlarmProximityStateScalarFieldEnum | Prisma.AlarmProximityStateScalarFieldEnum[]
 }
 
 /**

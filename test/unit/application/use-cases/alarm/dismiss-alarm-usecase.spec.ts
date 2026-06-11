@@ -1,4 +1,4 @@
-import { CheckAlarmProximityUseCase } from '../../../../../src/application/use-cases/alarm/check-alarm-proximity-usecase'
+import { DismissAlarmUseCase } from '../../../../../src/application/use-cases/alarm/dismiss-alarm-usecase'
 import { Alarm } from '../../../../../src/domain/entities/Alarm'
 import { AlarmProximityState } from '../../../../../src/domain/entities/AlarmProximityState'
 import type { AlarmProximityStateRepository } from '../../../../../src/domain/repositories/alarm-proximity-state-repository'
@@ -25,9 +25,6 @@ class FakeAlarmRepository implements AlarmRepository {
   }
 
   async update(alarm: Alarm): Promise<Alarm> {
-    this.alarms = this.alarms.map((currentAlarm) =>
-      currentAlarm.id === alarm.id ? alarm : currentAlarm,
-    )
     return alarm
   }
 
@@ -70,88 +67,38 @@ class FakeAlarmProximityStateRepository
   }
 }
 
-function makeAlarm(props?: Partial<Parameters<typeof Alarm.create>[0]>) {
+function makeAlarm(userId = 'user-id') {
   return Alarm.create({
-    userId: 'user-id',
+    userId,
     title: 'Casa',
     description: null,
-    address: 'Av. Paulista, 1000 - Sao Paulo',
     latitude: -23.5505,
     longitude: -46.6333,
     radius: 500,
-    ...props,
   })
 }
 
-describe('CheckAlarmProximityUseCase', () => {
+describe('DismissAlarmUseCase', () => {
   let alarmRepository: FakeAlarmRepository
   let alarmProximityStateRepository: FakeAlarmProximityStateRepository
-  let useCase: CheckAlarmProximityUseCase
+  let useCase: DismissAlarmUseCase
 
   beforeEach(() => {
     alarmRepository = new FakeAlarmRepository()
     alarmProximityStateRepository = new FakeAlarmProximityStateRepository()
-    useCase = new CheckAlarmProximityUseCase(
+    useCase = new DismissAlarmUseCase(
       alarmRepository,
       alarmProximityStateRepository,
     )
   })
 
-  it('returns active alarms inside the configured radius', async () => {
-    alarmRepository.alarms.push(makeAlarm())
-
-    const result = await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.5506,
-      longitude: -46.6334,
-    })
-
-    expect(result.triggeredAlarms).toHaveLength(1)
-    expect(result.triggeredAlarms[0].title).toBe('Casa')
-  })
-
-  it('does not return alarms outside the configured radius', async () => {
-    alarmRepository.alarms.push(makeAlarm({ radius: 50 }))
-
-    const result = await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.56,
-      longitude: -46.64,
-    })
-
-    expect(result.triggeredAlarms).toEqual([])
-  })
-
-  it('does not return inactive alarms', async () => {
-    alarmRepository.alarms.push(makeAlarm({ isActive: false }))
-
-    const result = await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.5505,
-      longitude: -46.6333,
-    })
-
-    expect(result.triggeredAlarms).toEqual([])
-  })
-
-  it('returns an empty array when the user has no alarms', async () => {
-    const result = await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.5505,
-      longitude: -46.6333,
-    })
-
-    expect(result.triggeredAlarms).toEqual([])
-  })
-
-  it('does not trigger dismissed alarms until the user exits and enters again', async () => {
+  it('dismisses an alarm until the user exits its radius', async () => {
     const alarm = makeAlarm()
     alarmRepository.alarms.push(alarm)
 
-    const firstCheck = await useCase.execute({
+    const result = await useCase.execute({
+      alarmId: alarm.id,
       userId: 'user-id',
-      latitude: -23.5506,
-      longitude: -46.6334,
     })
     const state =
       await alarmProximityStateRepository.findByAlarmIdAndUserId(
@@ -159,29 +106,24 @@ describe('CheckAlarmProximityUseCase', () => {
         'user-id',
       )
 
-    state?.dismissUntilExit()
-    await alarmProximityStateRepository.save(state!)
+    expect(result).toEqual({ dismissed: true })
+    expect(state?.dismissedUntilExit).toBe(true)
+    expect(state?.isInsideRadius).toBe(true)
+    expect(state?.dismissedAt).toBeInstanceOf(Date)
+  })
 
-    const stillInsideCheck = await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.5506,
-      longitude: -46.6334,
+  it('does not allow dismissing another user alarm', async () => {
+    const alarm = makeAlarm('another-user-id')
+    alarmRepository.alarms.push(alarm)
+
+    await expect(
+      useCase.execute({
+        alarmId: alarm.id,
+        userId: 'user-id',
+      }),
+    ).rejects.toMatchObject({
+      message: 'Alarm not found.',
+      statusCode: 404,
     })
-
-    await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.7,
-      longitude: -46.8,
-    })
-
-    const reentryCheck = await useCase.execute({
-      userId: 'user-id',
-      latitude: -23.5506,
-      longitude: -46.6334,
-    })
-
-    expect(firstCheck.triggeredAlarms).toHaveLength(1)
-    expect(stillInsideCheck.triggeredAlarms).toEqual([])
-    expect(reentryCheck.triggeredAlarms).toHaveLength(1)
   })
 })

@@ -10,6 +10,7 @@
  */
 export type * from './models/User.js'
 export type * from './models/Alarm.js'
+export type * from './models/AlarmProximityState.js'
 export type * from './models/Subscription.js'
 export type * from './models/Log.js'
 export type * from './commonInputTypes.js'

@@ -50,6 +50,11 @@ export type User = Prisma.UserModel
  */
 export type Alarm = Prisma.AlarmModel
 /**
+ * Model AlarmProximityState
+ * 
+ */
+export type AlarmProximityState = Prisma.AlarmProximityStateModel
+/**
  * Model Subscription
  * 
  */
