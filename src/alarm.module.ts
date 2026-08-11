@@ -9,11 +9,13 @@ import { ToggleAlarmStatusUseCase } from './application/use-cases/alarm/toggle-a
 import { UpdateAlarmUseCase } from './application/use-cases/alarm/update-alarm-usecase'
 import { ALARM_PROXIMITY_STATE_REPOSITORY } from './domain/repositories/alarm-proximity-state-repository'
 import { ALARM_REPOSITORY } from './domain/repositories/alarm-repository'
+import { ALARM_TRIGGER_REPOSITORY } from './domain/repositories/alarm-trigger-repository'
 import { USER_REPOSITORY } from './domain/repositories/user-repository'
 import { TOKEN_SERVICE } from './domain/services/token-service'
 import { PrismaModule } from './infra/database/prisma/prisma.module'
 import { PrismaAlarmProximityStateRepository } from './infra/repositories/prisma-alarm-proximity-state.repository'
 import { PrismaAlarmRepository } from './infra/repositories/prisma-alarm.repository'
+import { PrismaAlarmTriggerRepository } from './infra/repositories/prisma-alarm-trigger.repository'
 import { PrismaUserRepository } from './infra/repositories/prisma-user.repository'
 import { JwtTokenService } from './infra/services/jwt-token-service'
 import { AlarmController } from './presentation/http/controllers/alarm.controller'
@@ -40,6 +42,10 @@ import { AlarmService } from './presentation/http/services/alarm.service'
     {
       provide: ALARM_PROXIMITY_STATE_REPOSITORY,
       useClass: PrismaAlarmProximityStateRepository,
+    },
+    {
+      provide: ALARM_TRIGGER_REPOSITORY,
+      useClass: PrismaAlarmTriggerRepository,
     },
     {
       provide: USER_REPOSITORY,

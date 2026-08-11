@@ -28,6 +28,7 @@ model User {
   plan             Plan     @default(FREE)
   alarms Alarm[]
   alarmProximityStates AlarmProximityState[]
+  alarmTriggers AlarmTrigger[]
   subscriptions Subscription[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -45,6 +46,7 @@ model Alarm {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   proximityStates AlarmProximityState[]
+  triggers AlarmTrigger[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -65,6 +67,22 @@ model AlarmProximityState {
 
   @@unique([alarmId, userId])
   @@index([userId])
+}
+
+model AlarmTrigger {
+  id               String   @id
+  alarmId          String
+  alarm            Alarm    @relation(fields: [alarmId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  latitude         Float
+  longitude        Float
+  distanceInMeters Float
+  triggeredAt      DateTime @default(now())
+
+  @@index([alarmId])
+  @@index([userId])
+  @@index([triggeredAt])
 }
 
 model Subscription {

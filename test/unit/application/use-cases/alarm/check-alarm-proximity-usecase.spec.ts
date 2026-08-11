@@ -1,8 +1,10 @@
 import { CheckAlarmProximityUseCase } from '../../../../../src/application/use-cases/alarm/check-alarm-proximity-usecase'
 import { Alarm } from '../../../../../src/domain/entities/Alarm'
 import { AlarmProximityState } from '../../../../../src/domain/entities/AlarmProximityState'
+import { AlarmTrigger } from '../../../../../src/domain/entities/AlarmTrigger'
 import type { AlarmProximityStateRepository } from '../../../../../src/domain/repositories/alarm-proximity-state-repository'
 import type { AlarmRepository } from '../../../../../src/domain/repositories/alarm-repository'
+import type { AlarmTriggerRepository } from '../../../../../src/domain/repositories/alarm-trigger-repository'
 
 class FakeAlarmRepository implements AlarmRepository {
   alarms: Alarm[] = []
@@ -70,6 +72,19 @@ class FakeAlarmProximityStateRepository
   }
 }
 
+class FakeAlarmTriggerRepository implements AlarmTriggerRepository {
+  triggers: AlarmTrigger[] = []
+
+  async create(alarmTrigger: AlarmTrigger): Promise<AlarmTrigger> {
+    this.triggers.push(alarmTrigger)
+    return alarmTrigger
+  }
+
+  async findByAlarmId(alarmId: string): Promise<AlarmTrigger[]> {
+    return this.triggers.filter((trigger) => trigger.alarmId === alarmId)
+  }
+}
+
 function makeAlarm(props?: Partial<Parameters<typeof Alarm.create>[0]>) {
   return Alarm.create({
     userId: 'user-id',
@@ -86,14 +101,17 @@ function makeAlarm(props?: Partial<Parameters<typeof Alarm.create>[0]>) {
 describe('CheckAlarmProximityUseCase', () => {
   let alarmRepository: FakeAlarmRepository
   let alarmProximityStateRepository: FakeAlarmProximityStateRepository
+  let alarmTriggerRepository: FakeAlarmTriggerRepository
   let useCase: CheckAlarmProximityUseCase
 
   beforeEach(() => {
     alarmRepository = new FakeAlarmRepository()
     alarmProximityStateRepository = new FakeAlarmProximityStateRepository()
+    alarmTriggerRepository = new FakeAlarmTriggerRepository()
     useCase = new CheckAlarmProximityUseCase(
       alarmRepository,
       alarmProximityStateRepository,
+      alarmTriggerRepository,
     )
   })
 
@@ -108,6 +126,10 @@ describe('CheckAlarmProximityUseCase', () => {
 
     expect(result.triggeredAlarms).toHaveLength(1)
     expect(result.triggeredAlarms[0].title).toBe('Casa')
+    expect(alarmTriggerRepository.triggers).toHaveLength(1)
+    expect(alarmTriggerRepository.triggers[0].distanceInMeters).toEqual(
+      expect.any(Number),
+    )
   })
 
   it('does not return alarms outside the configured radius', async () => {
@@ -120,6 +142,7 @@ describe('CheckAlarmProximityUseCase', () => {
     })
 
     expect(result.triggeredAlarms).toEqual([])
+    expect(alarmTriggerRepository.triggers).toEqual([])
   })
 
   it('does not return inactive alarms', async () => {
@@ -132,6 +155,7 @@ describe('CheckAlarmProximityUseCase', () => {
     })
 
     expect(result.triggeredAlarms).toEqual([])
+    expect(alarmTriggerRepository.triggers).toEqual([])
   })
 
   it('returns an empty array when the user has no alarms', async () => {
@@ -183,5 +207,6 @@ describe('CheckAlarmProximityUseCase', () => {
     expect(firstCheck.triggeredAlarms).toHaveLength(1)
     expect(stillInsideCheck.triggeredAlarms).toEqual([])
     expect(reentryCheck.triggeredAlarms).toHaveLength(1)
+    expect(alarmTriggerRepository.triggers).toHaveLength(2)
   })
 })

@@ -25,6 +25,7 @@ import { UpdateUserPlanUseCase } from '../../src/application/use-cases/user/upda
 import { UpdateUserProfileUseCase } from '../../src/application/use-cases/user/update-user-profile-usecase'
 import { Alarm } from '../../src/domain/entities/Alarm'
 import { AlarmProximityState } from '../../src/domain/entities/AlarmProximityState'
+import { AlarmTrigger } from '../../src/domain/entities/AlarmTrigger'
 import { User } from '../../src/domain/entities/User'
 import { BusinessError } from '../../src/domain/errors/business-error'
 import {
@@ -35,6 +36,10 @@ import {
   ALARM_REPOSITORY,
   type AlarmRepository,
 } from '../../src/domain/repositories/alarm-repository'
+import {
+  ALARM_TRIGGER_REPOSITORY,
+  type AlarmTriggerRepository,
+} from '../../src/domain/repositories/alarm-trigger-repository'
 import {
   USER_REPOSITORY,
   type UserRepository,
@@ -158,6 +163,19 @@ class InMemoryAlarmProximityStateRepository
       storedState.id === state.id ? state : storedState,
     )
     return state
+  }
+}
+
+class InMemoryAlarmTriggerRepository implements AlarmTriggerRepository {
+  triggers: AlarmTrigger[] = []
+
+  async create(alarmTrigger: AlarmTrigger): Promise<AlarmTrigger> {
+    this.triggers.push(alarmTrigger)
+    return alarmTrigger
+  }
+
+  async findByAlarmId(alarmId: string): Promise<AlarmTrigger[]> {
+    return this.triggers.filter((trigger) => trigger.alarmId === alarmId)
   }
 }
 
@@ -300,6 +318,10 @@ describe('ProxAlert HTTP API (e2e)', () => {
         {
           provide: ALARM_PROXIMITY_STATE_REPOSITORY,
           useClass: InMemoryAlarmProximityStateRepository,
+        },
+        {
+          provide: ALARM_TRIGGER_REPOSITORY,
+          useClass: InMemoryAlarmTriggerRepository,
         },
         {
           provide: PASSWORD_HASHER,

@@ -387,6 +387,7 @@ export const ModelName = {
   User: 'User',
   Alarm: 'Alarm',
   AlarmProximityState: 'AlarmProximityState',
+  AlarmTrigger: 'AlarmTrigger',
   Subscription: 'Subscription',
   Log: 'Log'
 } as const
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "alarm" | "alarmProximityState" | "subscription" | "log"
+    modelProps: "user" | "alarm" | "alarmProximityState" | "alarmTrigger" | "subscription" | "log"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -627,6 +628,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AlarmProximityStateCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AlarmProximityStateCountAggregateOutputType> | number
+        }
+      }
+    }
+    AlarmTrigger: {
+      payload: Prisma.$AlarmTriggerPayload<ExtArgs>
+      fields: Prisma.AlarmTriggerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AlarmTriggerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AlarmTriggerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>
+        }
+        findFirst: {
+          args: Prisma.AlarmTriggerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AlarmTriggerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>
+        }
+        findMany: {
+          args: Prisma.AlarmTriggerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>[]
+        }
+        create: {
+          args: Prisma.AlarmTriggerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>
+        }
+        createMany: {
+          args: Prisma.AlarmTriggerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AlarmTriggerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>[]
+        }
+        delete: {
+          args: Prisma.AlarmTriggerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>
+        }
+        update: {
+          args: Prisma.AlarmTriggerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>
+        }
+        deleteMany: {
+          args: Prisma.AlarmTriggerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AlarmTriggerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AlarmTriggerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>[]
+        }
+        upsert: {
+          args: Prisma.AlarmTriggerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmTriggerPayload>
+        }
+        aggregate: {
+          args: Prisma.AlarmTriggerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAlarmTrigger>
+        }
+        groupBy: {
+          args: Prisma.AlarmTriggerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlarmTriggerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AlarmTriggerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlarmTriggerCountAggregateOutputType> | number
         }
       }
     }
@@ -862,6 +937,19 @@ export const AlarmProximityStateScalarFieldEnum = {
 } as const
 
 export type AlarmProximityStateScalarFieldEnum = (typeof AlarmProximityStateScalarFieldEnum)[keyof typeof AlarmProximityStateScalarFieldEnum]
+
+
+export const AlarmTriggerScalarFieldEnum = {
+  id: 'id',
+  alarmId: 'alarmId',
+  userId: 'userId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  distanceInMeters: 'distanceInMeters',
+  triggeredAt: 'triggeredAt'
+} as const
+
+export type AlarmTriggerScalarFieldEnum = (typeof AlarmTriggerScalarFieldEnum)[keyof typeof AlarmTriggerScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {
@@ -1153,6 +1241,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   alarm?: Prisma.AlarmOmit
   alarmProximityState?: Prisma.AlarmProximityStateOmit
+  alarmTrigger?: Prisma.AlarmTriggerOmit
   subscription?: Prisma.SubscriptionOmit
   log?: Prisma.LogOmit
 }

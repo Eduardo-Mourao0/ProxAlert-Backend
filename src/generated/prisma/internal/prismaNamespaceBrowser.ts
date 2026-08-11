@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Alarm: 'Alarm',
   AlarmProximityState: 'AlarmProximityState',
+  AlarmTrigger: 'AlarmTrigger',
   Subscription: 'Subscription',
   Log: 'Log'
 } as const
@@ -119,6 +120,19 @@ export const AlarmProximityStateScalarFieldEnum = {
 } as const
 
 export type AlarmProximityStateScalarFieldEnum = (typeof AlarmProximityStateScalarFieldEnum)[keyof typeof AlarmProximityStateScalarFieldEnum]
+
+
+export const AlarmTriggerScalarFieldEnum = {
+  id: 'id',
+  alarmId: 'alarmId',
+  userId: 'userId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  distanceInMeters: 'distanceInMeters',
+  triggeredAt: 'triggeredAt'
+} as const
+
+export type AlarmTriggerScalarFieldEnum = (typeof AlarmTriggerScalarFieldEnum)[keyof typeof AlarmTriggerScalarFieldEnum]
 
 
 export const SubscriptionScalarFieldEnum = {

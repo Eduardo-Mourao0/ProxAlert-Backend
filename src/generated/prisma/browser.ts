@@ -33,6 +33,11 @@ export type Alarm = Prisma.AlarmModel
  */
 export type AlarmProximityState = Prisma.AlarmProximityStateModel
 /**
+ * Model AlarmTrigger
+ * 
+ */
+export type AlarmTrigger = Prisma.AlarmTriggerModel
+/**
  * Model Subscription
  * 
  */

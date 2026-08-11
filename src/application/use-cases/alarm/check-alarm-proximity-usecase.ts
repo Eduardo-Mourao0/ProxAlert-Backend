@@ -9,6 +9,11 @@ import {
 } from '../../../domain/repositories/alarm-repository'
 import { Alarm } from '../../../domain/entities/Alarm'
 import { AlarmProximityState } from '../../../domain/entities/AlarmProximityState'
+import { AlarmTrigger } from '../../../domain/entities/AlarmTrigger'
+import {
+  ALARM_TRIGGER_REPOSITORY,
+  type AlarmTriggerRepository,
+} from '../../../domain/repositories/alarm-trigger-repository'
 import { DistanceCalculator } from '../../../domain/services/distance-calculator'
 import { AlarmDTO, toAlarmDTO } from '../../dtos/alarm-dto'
 
@@ -29,6 +34,8 @@ export class CheckAlarmProximityUseCase {
     private readonly alarmRepository: AlarmRepository,
     @Inject(ALARM_PROXIMITY_STATE_REPOSITORY)
     private readonly alarmProximityStateRepository: AlarmProximityStateRepository,
+    @Inject(ALARM_TRIGGER_REPOSITORY)
+    private readonly alarmTriggerRepository: AlarmTriggerRepository,
   ) {}
 
   async execute(request: CheckAlarmProximityRequest): Promise<CheckAlarmProximityResponse> {
@@ -89,6 +96,15 @@ export class CheckAlarmProximityUseCase {
 
     proximityState.registerTrigger(distance)
     await this.alarmProximityStateRepository.save(proximityState)
+    await this.alarmTriggerRepository.create(
+      AlarmTrigger.create({
+        alarmId: alarm.id,
+        userId: request.userId,
+        latitude: request.latitude,
+        longitude: request.longitude,
+        distanceInMeters: distance,
+      }),
+    )
     return true
   }
 }
