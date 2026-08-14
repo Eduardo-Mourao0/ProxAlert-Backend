@@ -19,6 +19,11 @@ enum LogLevel {
   ERROR
 }
 
+enum DevicePlatform {
+  IOS
+  ANDROID
+}
+
 model User {
   id               String   @id
   name             String
@@ -29,9 +34,24 @@ model User {
   alarms Alarm[]
   alarmProximityStates AlarmProximityState[]
   alarmTriggers AlarmTrigger[]
+  devices Device[]
   subscriptions Subscription[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model Device {
+  id        String         @id
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pushToken String         @unique
+  platform  DevicePlatform
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([isActive])
 }
 
 model Alarm {

@@ -18,6 +18,9 @@ import { ToggleAlarmStatusUseCase } from '../../src/application/use-cases/alarm/
 import { UpdateAlarmUseCase } from '../../src/application/use-cases/alarm/update-alarm-usecase'
 import { LoginUserUseCase } from '../../src/application/use-cases/auth/login-user-usecase'
 import { RefreshTokenUseCase } from '../../src/application/use-cases/auth/refresh-token-usecase'
+import { DeactivateDeviceUseCase } from '../../src/application/use-cases/device/deactivate-device-usecase'
+import { ListUserDevicesUseCase } from '../../src/application/use-cases/device/list-user-devices-usecase'
+import { RegisterDeviceUseCase } from '../../src/application/use-cases/device/register-device-usecase'
 import { ChangeUserPasswordUseCase } from '../../src/application/use-cases/user/change-user-password-usecase'
 import { CreateUserUseCase } from '../../src/application/use-cases/user/create-user-usecase'
 import { DeleteUserUseCase } from '../../src/application/use-cases/user/delete-user-usecase'
@@ -26,6 +29,7 @@ import { UpdateUserProfileUseCase } from '../../src/application/use-cases/user/u
 import { Alarm } from '../../src/domain/entities/Alarm'
 import { AlarmProximityState } from '../../src/domain/entities/AlarmProximityState'
 import { AlarmTrigger } from '../../src/domain/entities/AlarmTrigger'
+import { Device } from '../../src/domain/entities/Device'
 import { User } from '../../src/domain/entities/User'
 import { BusinessError } from '../../src/domain/errors/business-error'
 import {
@@ -41,6 +45,10 @@ import {
   type AlarmTriggerRepository,
 } from '../../src/domain/repositories/alarm-trigger-repository'
 import {
+  DEVICE_REPOSITORY,
+  type DeviceRepository,
+} from '../../src/domain/repositories/device-repository'
+import {
   USER_REPOSITORY,
   type UserRepository,
 } from '../../src/domain/repositories/user-repository'
@@ -54,10 +62,12 @@ import {
 } from '../../src/domain/services/token-service'
 import { AlarmController } from '../../src/presentation/http/controllers/alarm.controller'
 import { AuthController } from '../../src/presentation/http/controllers/auth.controller'
+import { DeviceController } from '../../src/presentation/http/controllers/device.controller'
 import { UserController } from '../../src/presentation/http/controllers/user.controller'
 import { JwtAuthGuard } from '../../src/presentation/http/guards/jwt-auth.guard'
 import { AlarmService } from '../../src/presentation/http/services/alarm.service'
 import { AuthService } from '../../src/presentation/http/services/auth.service'
+import { DeviceService } from '../../src/presentation/http/services/device.service'
 import { UserService } from '../../src/presentation/http/services/user.service'
 
 class InMemoryUserRepository implements UserRepository {
@@ -179,6 +189,36 @@ class InMemoryAlarmTriggerRepository implements AlarmTriggerRepository {
   }
 }
 
+class InMemoryDeviceRepository implements DeviceRepository {
+  devices: Device[] = []
+
+  async create(device: Device): Promise<Device> {
+    this.devices.push(device)
+    return device
+  }
+
+  async findById(id: string): Promise<Device | null> {
+    return this.devices.find((device) => device.id === id) ?? null
+  }
+
+  async findByPushToken(pushToken: string): Promise<Device | null> {
+    return (
+      this.devices.find((device) => device.pushToken === pushToken) ?? null
+    )
+  }
+
+  async findByUserId(userId: string): Promise<Device[]> {
+    return this.devices.filter((device) => device.userId === userId)
+  }
+
+  async update(device: Device): Promise<Device> {
+    this.devices = this.devices.map((currentDevice) =>
+      currentDevice.id === device.id ? device : currentDevice,
+    )
+    return device
+  }
+}
+
 class FakePasswordHasher implements PasswordHasher {
   async hash(value: string): Promise<string> {
     return `hashed:${value}`
@@ -287,11 +327,17 @@ describe('ProxAlert HTTP API (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      controllers: [UserController, AuthController, AlarmController],
+      controllers: [
+        UserController,
+        AuthController,
+        AlarmController,
+        DeviceController,
+      ],
       providers: [
         UserService,
         AuthService,
         AlarmService,
+        DeviceService,
         JwtAuthGuard,
         CreateUserUseCase,
         UpdateUserProfileUseCase,
@@ -300,6 +346,9 @@ describe('ProxAlert HTTP API (e2e)', () => {
         DeleteUserUseCase,
         LoginUserUseCase,
         RefreshTokenUseCase,
+        RegisterDeviceUseCase,
+        ListUserDevicesUseCase,
+        DeactivateDeviceUseCase,
         CreateAlarmUseCase,
         ListUserAlarmUseCase,
         UpdateAlarmUseCase,
@@ -322,6 +371,10 @@ describe('ProxAlert HTTP API (e2e)', () => {
         {
           provide: ALARM_TRIGGER_REPOSITORY,
           useClass: InMemoryAlarmTriggerRepository,
+        },
+        {
+          provide: DEVICE_REPOSITORY,
+          useClass: InMemoryDeviceRepository,
         },
         {
           provide: PASSWORD_HASHER,
@@ -621,5 +674,43 @@ describe('ProxAlert HTTP API (e2e)', () => {
       .expect(200)
 
     expect(reentryResponse.body.triggeredAlarms).toHaveLength(1)
+  })
+
+  it('registers, lists and deactivates authenticated user devices', async () => {
+    const { accessToken } = await createUserAndLogin()
+
+    const createResponse = await request(app.getHttpServer())
+      .post('/devices')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        pushToken: 'ExponentPushToken[test-token]',
+        platform: 'ANDROID',
+      })
+      .expect(201)
+
+    expect(createResponse.body).toMatchObject({
+      pushToken: 'ExponentPushToken[test-token]',
+      platform: 'ANDROID',
+      isActive: true,
+    })
+
+    const listResponse = await request(app.getHttpServer())
+      .get('/devices')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+
+    expect(listResponse.body).toHaveLength(1)
+
+    await request(app.getHttpServer())
+      .delete(`/devices/${createResponse.body.id}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+
+    const updatedListResponse = await request(app.getHttpServer())
+      .get('/devices')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200)
+
+    expect(updatedListResponse.body[0].isActive).toBe(false)
   })
 })

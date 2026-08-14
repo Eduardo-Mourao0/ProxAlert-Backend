@@ -26,6 +26,14 @@ export const LogLevel = {
 export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel]
 
 
+export const DevicePlatform = {
+  IOS: 'IOS',
+  ANDROID: 'ANDROID'
+} as const
+
+export type DevicePlatform = (typeof DevicePlatform)[keyof typeof DevicePlatform]
+
+
 export const PaymentProvider = {
   APPLE: 'APPLE',
   GOOGLE: 'GOOGLE'

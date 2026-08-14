@@ -582,10 +582,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type AlarmCreateNestedOneWithoutProximityStatesInput = {
   create?: Prisma.XOR<Prisma.AlarmCreateWithoutProximityStatesInput, Prisma.AlarmUncheckedCreateWithoutProximityStatesInput>
   connectOrCreate?: Prisma.AlarmCreateOrConnectWithoutProximityStatesInput

@@ -209,6 +209,7 @@ export type UserWhereInput = {
   alarms?: Prisma.AlarmListRelationFilter
   alarmProximityStates?: Prisma.AlarmProximityStateListRelationFilter
   alarmTriggers?: Prisma.AlarmTriggerListRelationFilter
+  devices?: Prisma.DeviceListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
 }
 
@@ -224,6 +225,7 @@ export type UserOrderByWithRelationInput = {
   alarms?: Prisma.AlarmOrderByRelationAggregateInput
   alarmProximityStates?: Prisma.AlarmProximityStateOrderByRelationAggregateInput
   alarmTriggers?: Prisma.AlarmTriggerOrderByRelationAggregateInput
+  devices?: Prisma.DeviceOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
 }
 
@@ -242,6 +244,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   alarms?: Prisma.AlarmListRelationFilter
   alarmProximityStates?: Prisma.AlarmProximityStateListRelationFilter
   alarmTriggers?: Prisma.AlarmTriggerListRelationFilter
+  devices?: Prisma.DeviceListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
 }, "id" | "email">
 
@@ -285,6 +288,7 @@ export type UserCreateInput = {
   alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
   alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
 }
 
@@ -300,6 +304,7 @@ export type UserUncheckedCreateInput = {
   alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -315,6 +320,7 @@ export type UserUpdateInput = {
   alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
   alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
 }
 
@@ -330,6 +336,7 @@ export type UserUncheckedUpdateInput = {
   alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -420,6 +427,20 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type UserCreateNestedOneWithoutDevicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDevicesInput
+  upsert?: Prisma.UserUpsertWithoutDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDevicesInput, Prisma.UserUpdateWithoutDevicesInput>, Prisma.UserUncheckedUpdateWithoutDevicesInput>
+}
+
 export type UserCreateNestedOneWithoutAlarmsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAlarmsInput, Prisma.UserUncheckedCreateWithoutAlarmsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlarmsInput
@@ -476,6 +497,82 @@ export type UserUpdateOneRequiredWithoutSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.UserUpdateWithoutSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
 }
 
+export type UserCreateWithoutDevicesInput = {
+  id: string
+  name: string
+  email: string
+  password: string
+  refreshTokenHash?: string | null
+  plan?: $Enums.Plan
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
+  alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
+  alarmTriggers?: Prisma.AlarmTriggerCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDevicesInput = {
+  id: string
+  name: string
+  email: string
+  password: string
+  refreshTokenHash?: string | null
+  plan?: $Enums.Plan
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
+  alarmTriggers?: Prisma.AlarmTriggerUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDevicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+}
+
+export type UserUpsertWithoutDevicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDevicesInput, Prisma.UserUncheckedUpdateWithoutDevicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDevicesInput, Prisma.UserUncheckedCreateWithoutDevicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDevicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDevicesInput, Prisma.UserUncheckedUpdateWithoutDevicesInput>
+}
+
+export type UserUpdateWithoutDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
+  alarmTriggers?: Prisma.AlarmTriggerUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
+  alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
+  alarmTriggers?: Prisma.AlarmTriggerUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutAlarmsInput = {
   id: string
   name: string
@@ -487,6 +584,7 @@ export type UserCreateWithoutAlarmsInput = {
   updatedAt?: Date | string
   alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
 }
 
@@ -501,6 +599,7 @@ export type UserUncheckedCreateWithoutAlarmsInput = {
   updatedAt?: Date | string
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -531,6 +630,7 @@ export type UserUpdateWithoutAlarmsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
 }
 
@@ -545,6 +645,7 @@ export type UserUncheckedUpdateWithoutAlarmsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -559,6 +660,7 @@ export type UserCreateWithoutAlarmProximityStatesInput = {
   updatedAt?: Date | string
   alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
 }
 
@@ -573,6 +675,7 @@ export type UserUncheckedCreateWithoutAlarmProximityStatesInput = {
   updatedAt?: Date | string
   alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -603,6 +706,7 @@ export type UserUpdateWithoutAlarmProximityStatesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
 }
 
@@ -617,6 +721,7 @@ export type UserUncheckedUpdateWithoutAlarmProximityStatesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -631,6 +736,7 @@ export type UserCreateWithoutAlarmTriggersInput = {
   updatedAt?: Date | string
   alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
   alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
 }
 
@@ -645,6 +751,7 @@ export type UserUncheckedCreateWithoutAlarmTriggersInput = {
   updatedAt?: Date | string
   alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -675,6 +782,7 @@ export type UserUpdateWithoutAlarmTriggersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
   alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
 }
 
@@ -689,6 +797,7 @@ export type UserUncheckedUpdateWithoutAlarmTriggersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -704,6 +813,7 @@ export type UserCreateWithoutSubscriptionsInput = {
   alarms?: Prisma.AlarmCreateNestedManyWithoutUserInput
   alarmProximityStates?: Prisma.AlarmProximityStateCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -718,6 +828,7 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   alarms?: Prisma.AlarmUncheckedCreateNestedManyWithoutUserInput
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedCreateNestedManyWithoutUserInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedCreateNestedManyWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -748,6 +859,7 @@ export type UserUpdateWithoutSubscriptionsInput = {
   alarms?: Prisma.AlarmUpdateManyWithoutUserNestedInput
   alarmProximityStates?: Prisma.AlarmProximityStateUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -762,6 +874,7 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   alarms?: Prisma.AlarmUncheckedUpdateManyWithoutUserNestedInput
   alarmProximityStates?: Prisma.AlarmProximityStateUncheckedUpdateManyWithoutUserNestedInput
   alarmTriggers?: Prisma.AlarmTriggerUncheckedUpdateManyWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -773,6 +886,7 @@ export type UserCountOutputType = {
   alarms: number
   alarmProximityStates: number
   alarmTriggers: number
+  devices: number
   subscriptions: number
 }
 
@@ -780,6 +894,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   alarms?: boolean | UserCountOutputTypeCountAlarmsArgs
   alarmProximityStates?: boolean | UserCountOutputTypeCountAlarmProximityStatesArgs
   alarmTriggers?: boolean | UserCountOutputTypeCountAlarmTriggersArgs
+  devices?: boolean | UserCountOutputTypeCountDevicesArgs
   subscriptions?: boolean | UserCountOutputTypeCountSubscriptionsArgs
 }
 
@@ -817,6 +932,13 @@ export type UserCountOutputTypeCountAlarmTriggersArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SubscriptionWhereInput
 }
@@ -834,6 +956,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   alarms?: boolean | Prisma.User$alarmsArgs<ExtArgs>
   alarmProximityStates?: boolean | Prisma.User$alarmProximityStatesArgs<ExtArgs>
   alarmTriggers?: boolean | Prisma.User$alarmTriggersArgs<ExtArgs>
+  devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -876,6 +999,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   alarms?: boolean | Prisma.User$alarmsArgs<ExtArgs>
   alarmProximityStates?: boolean | Prisma.User$alarmProximityStatesArgs<ExtArgs>
   alarmTriggers?: boolean | Prisma.User$alarmTriggersArgs<ExtArgs>
+  devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -888,6 +1012,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     alarms: Prisma.$AlarmPayload<ExtArgs>[]
     alarmProximityStates: Prisma.$AlarmProximityStatePayload<ExtArgs>[]
     alarmTriggers: Prisma.$AlarmTriggerPayload<ExtArgs>[]
+    devices: Prisma.$DevicePayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1296,6 +1421,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   alarms<T extends Prisma.User$alarmsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   alarmProximityStates<T extends Prisma.User$alarmProximityStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmProximityStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmProximityStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   alarmTriggers<T extends Prisma.User$alarmTriggersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmTriggersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmTriggerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  devices<T extends Prisma.User$devicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.User$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1796,6 +1922,30 @@ export type User$alarmTriggersArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.AlarmTriggerScalarFieldEnum | Prisma.AlarmTriggerScalarFieldEnum[]
+}
+
+/**
+ * User.devices
+ */
+export type User$devicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Device
+   */
+  select?: Prisma.DeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Device
+   */
+  omit?: Prisma.DeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeviceInclude<ExtArgs> | null
+  where?: Prisma.DeviceWhereInput
+  orderBy?: Prisma.DeviceOrderByWithRelationInput | Prisma.DeviceOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeviceScalarFieldEnum | Prisma.DeviceScalarFieldEnum[]
 }
 
 /**
